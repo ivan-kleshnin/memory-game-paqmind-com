@@ -1,0 +1,28 @@
+{
+  "name": "cycle-examples",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "webpack-dev-server --port 2992 --inline"
+  },
+  "dependencies": {
+    "@cycle/core": "^6.0.3",
+    "@cycle/dom": "^9.1.0",
+    "@cycle/isolate": "^1.2.0",
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-syntax-function-bind": "^6.5.0",
+    "babel-plugin-transform-function-bind": "^6.5.2",
+    "css-loader": "^0.23.1",
+    "less": "^2.6.1",
+    "less-loader": "^2.2.3",
+    "ramda": "^0.21.0",
+    "rx": "^4.1.0",
+    "style-loader": "^0.13.1",
+    "tcomb": "^3.0.0",
+    "webpack": "^1.12.15",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "author": "Paqmind Team",
+  "license": "MIT"
+}

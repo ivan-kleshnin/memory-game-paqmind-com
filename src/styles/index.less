@@ -1,0 +1,102 @@
+// NORMALIZE
+div {
+  box-sizing: border-box;
+}
+
+// PAGE
+body {
+  background: #eee;
+  //font-family: Calibri, sans-serif;
+  //font-size: 400%;
+  //padding: 50px;
+}
+
+//.content {
+//	max-width: 1000px;
+//}
+//
+//
+//// BOARD
+.setup-board(@gridStep) {
+  font-size: @gridStep;
+  &.cols-1 {width: @gridStep * 1}
+  &.cols-2 {width: @gridStep * 2}
+  &.cols-3 {width: @gridStep * 3}
+  &.cols-4 {width: @gridStep * 4}
+  &.cols-5 {width: @gridStep * 5}
+  &.cols-6 {width: @gridStep * 6}
+  &.cols-7 {width: @gridStep * 7}
+  &.cols-8 {width: @gridStep * 8}
+  &.cols-9 {width: @gridStep * 9}
+  &.cols-10 {width: @gridStep * 10}
+
+  &.rows-1 {height: @gridStep * 1}
+  &.rows-2 {height: @gridStep * 2}
+  &.rows-3 {height: @gridStep * 3}
+  &.rows-4 {height: @gridStep * 4}
+  &.rows-5 {height: @gridStep * 5}
+  &.rows-6 {height: @gridStep * 6}
+  &.rows-7 {height: @gridStep * 7}
+  &.rows-8 {height: @gridStep * 8}
+  &.rows-9 {height: @gridStep * 9}
+  &.rows-10 {height: @gridStep * 10}
+
+  span {
+    float: left;
+    height: @gridStep;
+    width: @gridStep;
+    text-align: center;
+    &:before {
+      font-style: normal;
+      display: inline-block;
+      line-height: @gridStep;
+      vertical-align: middle;
+    }
+    &.closed {
+      cursor: pointer;
+      &:before {
+        color: black;
+      }
+    }
+    &.opened {
+      &:before {
+        opacity: 0.1;
+      }
+    }
+    &.done {
+      opacity: 0;
+    }
+    //&.gray {color: gray;}
+
+    //&.opacity-20 {opacity: 0.2;}
+    //&.opacity-50 {opacity: 0.5;}
+  }
+}
+
+.board {
+  @gridStep: 60px;
+//  background: #fff;
+//  border: 2px solid #000;
+  .setup-board(@gridStep);
+//  &.big {
+//    @gridStep: 100px;
+//    .setup-board(@gridStep);
+//  }
+//  &.sm {
+//    @gridStep: 10px;
+//    .setup-board(@gridStep);
+//  }
+  font-size: 68px;
+}
+
+.cell {
+  position: relative
+}
+
+.payload {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 60px;
+  font-size: 50%;
+}
