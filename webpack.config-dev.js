@@ -9,18 +9,18 @@ module.exports = {
 
   // webpack.github.io/docs/configuration.html#entry
   entry: {
-    "app": "./src/app",
+    "bundle": "./src/app",
   },
 
   output: {
     // webpack.github.io/docs/configuration.html#output-path
-    path: __dirname,
+    path: Path.resolve(__dirname, "public"),
 
     // webpack.github.io/docs/configuration.html#output-filename
-     filename: "public/bundle.js",
+    filename: "[name].js",
 
     // webpack.github.io/docs/configuration.html#output-publicpath
-    publicPath: "http://localhost:2992/",
+    publicPath: "/",
 
     // webpack.github.io/docs/configuration.html#output-pathinfo
     pathinfo: true,

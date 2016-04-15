@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.config-dev.js --port 2992 --inline --progress --colors",
+    "dev": "webpack-dev-server --config webpack.config-dev.js --port 2992 --content-base public/ --inline --progress --colors",
     "prod": "webpack --config webpack.config-prod.js --progress --colors"
   },
   "dependencies": {

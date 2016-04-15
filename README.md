@@ -7,8 +7,13 @@
 3. Install static server with `$ npm install http-server -g`
 4. Install packages with `$ npm install`
 
-## Run
+## Run in dev mode
 
-1. Run webpack with `$ npm run dev`
-2. Run static server with `$ http-server ./`
+1. Run webpack-dev-server with `$ npm run dev`
+2. See `localhost:2992`
+
+## Run in prod mode
+
+1. Run webpack with `$ npm run prod`
+2. Run static server with `$ http-server ./public`
 3. See `localhost:8080`

@@ -20,7 +20,7 @@ module.exports = {
     path: Path.resolve(__dirname, "public"),
 
     // webpack.github.io/docs/configuration.html#output-filename
-    filename: "[name].js?[chunkhash]",
+    filename: "[name].js",
 
     // webpack.github.io/docs/configuration.html#output-publicpath
     publicPath: "/",
