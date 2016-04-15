@@ -1,22 +1,29 @@
-// NORMALIZE
-div {
+// NORMALIZE =======================================================================================
+* {
   box-sizing: border-box;
 }
 
-// PAGE
+// PAGE ============================================================================================
 body {
   background: #eee;
-  //font-family: Calibri, sans-serif;
-  //font-size: 400%;
-  //padding: 50px;
 }
 
-//.content {
-//	max-width: 1000px;
+//@font-face {
+//  font-family: 'FontAwesome';
+//  src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
+//  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
+//  font-weight: normal;
+//  font-style: normal;
 //}
-//
-//
-//// BOARD
+
+.cell {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+}
+
+// BOARD ===========================================================================================
 .setup-board(@gridStep) {
   font-size: @gridStep;
   &.cols-1 {width: @gridStep * 1}
@@ -41,21 +48,38 @@ body {
   &.rows-9 {height: @gridStep * 9}
   &.rows-10 {height: @gridStep * 10}
 
-  span {
+  .cell {
+    // does not work
+    :hover {
+      color: red!important;
+    }
+
     float: left;
     height: @gridStep;
     width: @gridStep;
     text-align: center;
     &:before {
-      font-style: normal;
-      display: inline-block;
       line-height: @gridStep;
-      vertical-align: middle;
+
+      // TODO remove?
+      //font-style: normal;
+      //display: inline-block;
+      //vertical-align: middle;
+
+      // does not work
+      :hover {
+        color: red!important;
+      }
     }
     &.closed {
       cursor: pointer;
       &:before {
         color: black;
+
+        // does not work
+        :hover {
+          color: red!important;
+        }
       }
     }
     &.opened {
@@ -66,17 +90,28 @@ body {
     &.done {
       opacity: 0;
     }
-    //&.gray {color: gray;}
 
-    //&.opacity-20 {opacity: 0.2;}
-    //&.opacity-50 {opacity: 0.5;}
+    position: relative;
+
+    .payload {
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      width: 50%; height: 50%;
+      margin: auto;
+      font-size: 50%;
+    }
+  }
+
+  .cell:before {
+    content: "\f0c8";
+    :hover {
+      color: red;
+    }
   }
 }
 
 .board {
   @gridStep: 60px;
-//  background: #fff;
-//  border: 2px solid #000;
   .setup-board(@gridStep);
 //  &.big {
 //    @gridStep: 100px;
@@ -87,16 +122,4 @@ body {
 //    .setup-board(@gridStep);
 //  }
   font-size: 68px;
-}
-
-.cell {
-  position: relative
-}
-
-.payload {
-  position: absolute;
-  left: 0;
-  top: 0;
-  line-height: 60px;
-  font-size: 50%;
 }

@@ -61,11 +61,11 @@ let doneOpened = (board) => {
 let renderCell = curry((i, j, cell) => {
   let attrs = {attributes: {"data-row": i, "data-col": j}}
   if (cell[1] == 2) {
-    return span(".cell.done.fa.fa-square", attrs)
+    return span(".cell.done", attrs)
   } else if (cell[1] == 1) {
-    return span(".cell.opened.fa.fa-square", attrs, span(".payload", cell[0]))
+    return span(".cell.opened", attrs, span(".payload", cell[0]))
   } else {
-    return span(".cell.closed.fa.fa-square", attrs)
+    return span(".cell.closed", attrs)
   }
 })
 
