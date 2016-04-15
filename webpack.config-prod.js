@@ -36,7 +36,7 @@ module.exports = {
   module: {
     loaders: [ // webpack.github.io/docs/loaders.html
       // JS: github.com/babel/babel-loader
-      {test: /\.js$/, loaders: ["babel?presets[]=es2015"], exclude: /node_modules/},
+      {test: /\.js$/, loaders: ["babel"], exclude: /node_modules/},
 
       // CSS: github.com/webpack/css-loader
       {test: /\.(css(\?.*)?)$/, loaders: ["style", "css"]},
