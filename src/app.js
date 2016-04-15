@@ -9,7 +9,7 @@ let {maxOpenCells} = require("./rules")
 let seeds = require("./seeds")
 require("./styles/index.less")
 
-let mapIndexed = addIndex(map)
+let mapi = addIndex(map)
 
 let payloadLens = curry((i, j) => compose(R.lensIndex(i), R.lensIndex(j), R.lensIndex(0)))
 
@@ -74,7 +74,7 @@ let renderBoard = (board) => {
   let rowsM = board.length
   let colsN = board[0] ? board[0].length : 0
   return div(`.board.rows-${rowsM}.cols-${colsN}`,
-    mapIndexed((r, i) => mapIndexed((c, j) => renderCell(i, j, c), r), board)
+    mapi((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
   )
 }
 

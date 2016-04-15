@@ -1,7 +1,7 @@
 let R = require("ramda")
 let {complement, curry, is, map, split} = require("ramda")
 let {Observable} = require("rx")
-let {always, fst, snd} = require("./helpers.js")
+let {always, fst, snd} = require("./helpers")
 
 // scanFn :: s -> (s -> s) -> s
 let scanFn = curry((state, updateFn) => {
