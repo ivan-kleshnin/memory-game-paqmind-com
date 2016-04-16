@@ -1,5 +1,7 @@
 "use strict";
 
+let Autoprefixer = require("autoprefixer")
+let ExtractTextPlugin = require("extract-text-webpack-plugin")
 let Path = require("path")
 let Webpack = require("webpack")
 
@@ -9,35 +11,32 @@ module.exports = {
 
   // webpack.github.io/docs/configuration.html#entry
   entry: {
-    "app": "./src/app",
+    "bundle": "./src/app",
   },
 
   output: {
     // webpack.github.io/docs/configuration.html#output-path
-    path: __dirname,
+    path: Path.resolve(__dirname, "public"),
 
     // webpack.github.io/docs/configuration.html#output-filename
-    filename: "public/bundle.js",
+    filename: "[name].js",
 
     // webpack.github.io/docs/configuration.html#output-publicpath
-    publicPath: "http://localhost:2992/",
+    publicPath: "/",
 
     // webpack.github.io/docs/configuration.html#output-pathinfo
-    pathinfo: true,
+    pathinfo: false,
   },
 
   // webpack.github.io/docs/configuration.html#debug
-  debug: true,
-
-  // webpack.github.io/docs/configuration.html#devtool
-  devtool: "source-map",
+  debug: false,
 
   // webpack.github.io/docs/configuration.html#module
   module: {
     loaders: [ // webpack.github.io/docs/loaders.html
       // JS: github.com/babel/babel-loader
       {test: /\.js$/, loaders: ["babel"], exclude: /node_modules/},
-      
+
       // CSS: github.com/webpack/css-loader
       {test: /\.(css(\?.*)?)$/, loaders: ["style", "css"]},
 
@@ -45,4 +44,13 @@ module.exports = {
       {test: /\.(less(\?.*)?)$/, loaders: ["style", "css", "less"]},
     ],
   },
+
+  // github.com/postcss/autoprefixer
+  postcss: [Autoprefixer()],
+
+  // webpack.github.io/docs/list-of-plugins.html
+  plugins: [
+    new ExtractTextPlugin("[name].css", {allChunks: true}),
+    new Webpack.optimize.UglifyJsPlugin({compress: {warnings: false}, mangle: {except: ["$", "window", "document", "console"]}}),
+  ],
 }
