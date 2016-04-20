@@ -63,28 +63,28 @@ let renderCell = curry((i, j, cell) => {
   if (cell[1] == 0) {
     // closed
     return span(".cell", cellAttrs,
-      span(".card", {attributes: {"data-state": 0}}, [
-        span(".face.front", "?"),
-        span(".face.back", cell[0]),
+      span(".card.flipper", {attributes: {"data-state": 0}}, [
+        span(".front", "?"),
+        span(".back", cell[0]),
       ])
     )
   } else if (cell[1] == 1) {
     // opened
     return span(".cell", cellAttrs,
-      span(".card.flipped", {attributes: {"data-state": 1}}, [
-        span(".face.front", "?"),
-        span(".face.back", cell[0]),
+      span(".card.flipper.flipped", {attributes: {"data-state": 1}}, [
+        span(".front", "?"),
+        span(".back", cell[0]),
       ])
     )
   } else {
     // done
     return span(".cell", cellAttrs,
-      span(".card.hidden", {attributes: {"data-state": 2}}, [
-        span(".face.front", "?"),
-        span(".face.back", cell[0]),
+      span(".card.flipper.hidden", {attributes: {"data-state": 2}}, [
+        span(".front", "?"),
+        span(".back", cell[0]),
       ])
     )
-  }  
+  }
 })
 
 // renderBoard :: [[Cell]] -> String
