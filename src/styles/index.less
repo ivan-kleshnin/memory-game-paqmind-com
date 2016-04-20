@@ -1,24 +1,32 @@
-// NORMALIZE
-div {
+// NORMALIZE =======================================================================================
+* {
   box-sizing: border-box;
 }
 
-// PAGE
+// PAGE ============================================================================================
 body {
   background: #eee;
-  //font-family: Calibri, sans-serif;
-  //font-size: 400%;
-  //padding: 50px;
 }
 
-//.content {
-//	max-width: 1000px;
+//@font-face {
+//  font-family: 'FontAwesome';
+//  src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
+//  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
+//  font-weight: normal;
+//  font-style: normal;
 //}
 //
-//
-//// BOARD
+//.cell {
+//  display: inline-block;
+//  font: normal normal normal 14px/1 FontAwesome;
+//  font-size: inherit;
+//  text-rendering: auto;
+//}
+
+// BOARD ===========================================================================================
 .setup-board(@gridStep) {
   font-size: @gridStep;
+
   &.cols-1 {width: @gridStep * 1}
   &.cols-2 {width: @gridStep * 2}
   &.cols-3 {width: @gridStep * 3}
@@ -41,42 +49,59 @@ body {
   &.rows-9 {height: @gridStep * 9}
   &.rows-10 {height: @gridStep * 10}
 
-  span {
-    float: left;
-    height: @gridStep;
-    width: @gridStep;
-    text-align: center;
-    &:before {
-      font-style: normal;
-      display: inline-block;
-      line-height: @gridStep;
-      vertical-align: middle;
-    }
-    &.closed {
-      cursor: pointer;
-      &:before {
-        color: black;
-      }
-    }
-    &.opened {
-      &:before {
-        opacity: 0.1;
-      }
-    }
-    &.done {
-      opacity: 0;
-    }
-    //&.gray {color: gray;}
+  .cell {
+    margin: 1px;
+    border-radius: 0.05em;
 
-    //&.opacity-20 {opacity: 0.2;}
-    //&.opacity-50 {opacity: 0.5;}
+    float: left;
+    height: @gridStep - 2;
+    width: @gridStep - 2;
+
+    .card {
+      display: block;
+      line-height: @gridStep;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      font-size: 50%;
+      perspective: 10em;
+      //transition: 1s;
+      transform-style: preserve-3d;
+
+      cursor: pointer;
+
+      &.flipped {
+        cursor: default;
+
+        .face {
+          transform: rotateY(-180deg);
+        }
+      }
+
+      &.hidden {
+        visibility: hidden;
+      }
+
+      .face {
+        backface-visibility: hidden;
+      }
+
+      .face.front {
+        background-color: black;
+        color: white;
+      }
+
+      .face.back {
+        background-color: white;
+        color: black;
+        transform: rotateY(-180deg);
+      }
+    }
   }
 }
 
 .board {
   @gridStep: 60px;
-//  background: #fff;
-//  border: 2px solid #000;
   .setup-board(@gridStep);
 //  &.big {
 //    @gridStep: 100px;
@@ -87,16 +112,4 @@ body {
 //    .setup-board(@gridStep);
 //  }
   font-size: 68px;
-}
-
-.cell {
-  position: relative
-}
-
-.payload {
-  position: absolute;
-  left: 0;
-  top: 0;
-  line-height: 60px;
-  font-size: 50%;
 }

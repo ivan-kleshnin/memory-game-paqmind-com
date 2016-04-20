@@ -59,14 +59,32 @@ let doneOpened = (board) => {
 
 // renderCell :: Cell -> String
 let renderCell = curry((i, j, cell) => {
-  let attrs = {attributes: {"data-row": i, "data-col": j}}
-  if (cell[1] == 2) {
-    return span(".cell.done.fa.fa-square", attrs)
+  let cellAttrs = {attributes: {"data-row": i, "data-col": j}}
+  if (cell[1] == 0) {
+    // closed
+    return span(".cell", cellAttrs,
+      span(".card", {attributes: {"data-state": 0}}, [
+        span(".face.front", "?"),
+        span(".face.back", cell[0]),
+      ])
+    )
   } else if (cell[1] == 1) {
-    return span(".cell.opened.fa.fa-square", attrs, span(".payload", cell[0]))
+    // opened
+    return span(".cell", cellAttrs,
+      span(".card.flipped", {attributes: {"data-state": 1}}, [
+        span(".face.front", "?"),
+        span(".face.back", cell[0]),
+      ])
+    )
   } else {
-    return span(".cell.closed.fa.fa-square", attrs)
-  }
+    // done
+    return span(".cell", cellAttrs,
+      span(".card.hidden", {attributes: {"data-state": 2}}, [
+        span(".face.front", "?"),
+        span(".face.back", cell[0]),
+      ])
+    )
+  }  
 })
 
 // renderBoard :: [[Cell]] -> String
@@ -80,7 +98,7 @@ let renderBoard = (board) => {
 
 // main :: {Observable *} -> {Observable *}
 let main = (src) => {
-  let clickFrom = (s) => src.DOM.select(s).events("click").map((e) => e.target).share()
+  let clickFrom = (s) => src.DOM.select(s).events("click").map((e) => e.currentTarget).share()
 
   // DERIVED STATE
   let board = src.state::view("board")
@@ -93,7 +111,8 @@ let main = (src) => {
 
   // INTENTS
   let intents = {
-    open: clickFrom(".cell.closed")
+    open: clickFrom(".card[data-state='0']")
+      .map((node) => node.parentNode)
       .map((t) => t.dataset)
       ::rejectBy(derived.isLocked)
       ::rejectBy(derived.isWin)
