@@ -4,7 +4,7 @@ let {addIndex, all, chain, compose, curry, equals, head, identity, length, map, 
 let {Observable} = require("rx")
 let Cycle = require("@cycle/core")
 let {a, div, makeDOMDriver, h1, span} = require("@cycle/dom")
-let {filterBy, overState, setState, store, swapState, view} = require("./rx.utils.js")
+let {overState, rejectBy, setState, store, swapState, view} = require("./rx.utils.js")
 let {maxOpenCells} = require("./rules")
 let seeds = require("./seeds")
 require("./styles/index.less")
@@ -95,8 +95,8 @@ let main = (src) => {
   let intents = {
     open: clickFrom(".cell.closed")
       .map((t) => t.dataset)
-      ::filterBy(derived.isLocked)
-      ::filterBy(derived.isWin)
+      ::rejectBy(derived.isLocked)
+      ::rejectBy(derived.isWin)
       .share(),
   }
 
