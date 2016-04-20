@@ -1,11 +1,53 @@
+// VARIABLES =======================================================================================
+// Background
+@bgColor:          #eee;
+
+// Text
+@textFontFamily: "Source Sans Pro", Helvetica, sans-serif;
+@titleFontFamily: "Nunito", Georgia, serif;
+@textFontSize: 20px;
+@lineHeight: 1.5rem;
+
 // NORMALIZE =======================================================================================
 * {
   box-sizing: border-box;
 }
+html {
+  font-size: @textFontSize;
+  height: 100%;
+}
 
 // PAGE ============================================================================================
 body {
-  background: #eee;
+  background: @bgColor;
+  font-family: @textFontFamily;
+  margin: 0;
+  padding: 0;
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    #header {
+      flex: none;
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+    #content {
+      flex: 1 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #footer {
+      flex: none;
+      font-size: 0.85rem;
+      height: 3rem;
+      text-align: center;
+    }
+  }
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: @titleFontFamily;
 }
 
 // BOARD ===========================================================================================
