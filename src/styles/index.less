@@ -1,27 +1,59 @@
+// CONSTANTS =======================================================================================
+// Background
+@bgColor: #eee;
+
+// Text
+@textFontFamily: "Source Sans Pro", Helvetica, sans-serif;
+@titleFontFamily: "Nunito", Georgia, serif;
+@textFontSize: 20px;
+@lineHeight: 1.5rem;
+
 // NORMALIZE =======================================================================================
 * {
   box-sizing: border-box;
 }
+html {
+  font-size: @textFontSize;
+  height: 100%;
+}
 
 // PAGE ============================================================================================
 body {
-  background: #eee;
+  background: @bgColor;
+  font-family: @textFontFamily;
+  margin: 0;
+  padding: 0;
+
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+
+    #header {
+      flex: none;
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    #content {
+      flex: 1 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #footer {
+      flex: none;
+      font-size: 0.85rem;
+      height: 3rem;
+      text-align: center;
+    }
+  }
 }
 
-//@font-face {
-//  font-family: 'FontAwesome';
-//  src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
-//  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
-//  font-weight: normal;
-//  font-style: normal;
-//}
-//
-//.cell {
-//  display: inline-block;
-//  font: normal normal normal 14px/1 FontAwesome;
-//  font-size: inherit;
-//  text-rendering: auto;
-//}
+h1, h2, h3, h4, h5, h6 {
+  font-family: @titleFontFamily;
+}
 
 // BOARD ===========================================================================================
 .setup-board(@gridStep) {
@@ -48,60 +80,12 @@ body {
   &.rows-8 {height: @gridStep * 8}
   &.rows-9 {height: @gridStep * 9}
   &.rows-10 {height: @gridStep * 10}
-
-  .cell {
-    margin: 1px;
-    border-radius: 0.05em;
-
-    float: left;
-    height: @gridStep - 2;
-    width: @gridStep - 2;
-
-    .card {
-      display: block;
-      line-height: @gridStep;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      font-size: 50%;
-      perspective: 10em;
-      //transition: 1s;
-      transform-style: preserve-3d;
-
-      cursor: pointer;
-
-      &.flipped {
-        cursor: default;
-
-        .face {
-          transform: rotateY(-180deg);
-        }
-      }
-
-      &.hidden {
-        visibility: hidden;
-      }
-
-      .face {
-        backface-visibility: hidden;
-      }
-
-      .face.front {
-        background-color: black;
-        color: white;
-      }
-
-      .face.back {
-        background-color: white;
-        color: black;
-        transform: rotateY(-180deg);
-      }
-    }
-  }
 }
 
 .board {
   @gridStep: 60px;
+  @cellMargin: 1px;
+
   .setup-board(@gridStep);
 //  &.big {
 //    @gridStep: 100px;
@@ -111,5 +95,76 @@ body {
 //    @gridStep: 10px;
 //    .setup-board(@gridStep);
 //  }
-  font-size: 68px;
+
+  .cell {
+    margin: @cellMargin;
+    border-radius: 0.05em;
+
+    float: left;
+    height: @gridStep - @cellMargin * 2;
+    width: @gridStep - @cellMargin * 2;
+
+    .card {
+      display: block;
+      font-size: 50%;
+      width: 100%;
+      height: 100%;
+      line-height: @gridStep;
+      text-align: center;
+
+      &.hidden {
+        visibility: hidden;
+      }
+
+      .front {
+        background-color: black;
+        color: white;
+        cursor: pointer;
+      }
+
+      .back {
+        background-color: white;
+        color: black;
+      }
+    }
+
+    .card.flipper {
+      position: relative;
+      perspective: 1000;
+      transition: 0.6s;
+      transform-style: preserve-3d;
+
+      .front, .back {
+        backface-visibility: hidden;
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        transform: rotateY(0deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      .front {
+        transform: rotateY(0deg);
+        z-index: 2;
+      }
+
+      .back {
+        transform: rotateY(-180deg);
+      }
+
+      &.flipped {
+        cursor: default;
+
+        .front {
+          transform: rotateY(180deg);
+        }
+        .back {
+          transform: rotateY(0deg);
+        }
+      }
+    }
+  }
 }
