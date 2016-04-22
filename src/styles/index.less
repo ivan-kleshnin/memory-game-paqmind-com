@@ -8,6 +8,13 @@
 @textFontSize: 20px;
 @lineHeight: 1.5rem;
 
+// Cards
+@cardFrontBgColor: #151513;
+@cardFrontColor: white;
+@cardBackBgColor: white;
+@cardBackColor: black;
+@cardShadowColor: lightgray;
+
 // NORMALIZE =======================================================================================
 * {
   box-sizing: border-box;
@@ -117,38 +124,42 @@ h1, h2, h3, h4, h5, h6 {
       }
 
       .front {
-        background-color: black;
-        color: white;
+        background-color: @cardFrontBgColor;
+        color: @cardFrontColor;
         cursor: pointer;
       }
 
       .back {
-        background-color: white;
-        color: black;
+        background-color: @cardBackBgColor;
+        color: @cardBackColor;
+      }
+    }
+
+    .card.shaker {
+      &:hover {
+        transition: 0.1s;
+        transform: rotateY(30deg);
       }
     }
 
     .card.flipper {
       position: relative;
-      perspective: 1000;
-      transition: 0.6s;
-      transform-style: preserve-3d;
+      perspective: 250px;
 
       .front, .back {
         backface-visibility: hidden;
-        transition: 0.6s;
-        transform-style: preserve-3d;
+        transition: transform 0.6s;
         transform: rotateY(0deg);
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         right: 0;
+        box-shadow: 2px 2px 1px @cardShadowColor;
       }
 
       .front {
         transform: rotateY(0deg);
-        z-index: 2;
       }
 
       .back {
@@ -156,11 +167,10 @@ h1, h2, h3, h4, h5, h6 {
       }
 
       &.flipped {
-        cursor: default;
-
         .front {
           transform: rotateY(180deg);
         }
+
         .back {
           transform: rotateY(0deg);
         }
