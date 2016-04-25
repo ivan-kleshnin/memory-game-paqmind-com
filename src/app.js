@@ -4,7 +4,7 @@ let {addIndex, all, chain, compose, curry, equals, head, identity, length, map, 
 let {Observable} = require("rx")
 let Cycle = require("@cycle/core")
 let {a, div, makeDOMDriver, h1, span} = require("@cycle/dom")
-let {overState, rejectBy, setState, store, swapState, view} = require("./rx.utils.js")
+let {derive, overState, rejectBy, store, toOverState, view} = require("./rx.utils.js")
 let {maxOpenCells} = require("./rules")
 let seeds = require("./seeds")
 require("./styles/index.less")
@@ -85,10 +85,10 @@ let main = (src) => {
   // DERIVED STATE
   let board = src.state::view("board")
   let derived = {
-    isLocked: board.map(aboutToLock).shareReplay(1),
-    isAboutToClose: board.map(aboutToClose).shareReplay(1),
-    isAboutToDone: board.map(aboutToDone).shareReplay(1),
-    isWin: board.map(aboutToWin).shareReplay(1),
+    isLocked: derive(aboutToLock, board),
+    isAboutToClose: derive(aboutToClose, board),
+    isAboutToDone: derive(aboutToDone, board),
+    isWin: derive(aboutToWin, board),
   }
 
   // INTENTS
@@ -102,10 +102,10 @@ let main = (src) => {
 
   // UPDATE
   let update = Observable.merge(
-    derived.isAboutToClose.filter(identity)::swapState("board", closeOpened).delay(1000),
-    derived.isAboutToDone.filter(identity)::swapState("board", doneOpened).delay(1000),
+    derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
+    derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
 
-    intents.open::overState("board", (cell) => (state) => {
+    intents.open::toOverState("board", (cell) => (state) => {
       let ls = stateLens(Number(cell.row), Number(cell.col))
       return R.set(ls, 1, state)
     }).share()
@@ -118,7 +118,7 @@ let main = (src) => {
   return {
     state,
 
-    DOM: state.zip(derived.isWin, (state, isWin) => {
+    DOM: state.combineLatest(derived.isWin, (state, isWin) => {
       if (isWin) {
         return h1("You win!")
       }  else {
