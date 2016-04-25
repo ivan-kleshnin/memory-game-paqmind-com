@@ -4,7 +4,7 @@ let {addIndex, all, chain, compose, curry, equals, head, identity, length, map, 
 let {Observable: $} = require("rx")
 let Cycle = require("@cycle/core")
 let {a, div, makeDOMDriver, h1, span} = require("@cycle/dom")
-let {derive, overState, rejectBy, store, toOverState, view} = require("./rx.utils.js")
+let {derive, overState, pluck, rejectBy, store, toOverState, view} = require("./rx.utils.js")
 let {maxOpenCells} = require("./rules")
 let seeds = require("./seeds")
 require("./styles/index.less")
@@ -93,8 +93,12 @@ let main = (src) => {
 
   // INTENTS
   let intents = {
-    open: clickFrom(".cell.closed")
-      .map((t) => t.dataset)
+    open: clickFrom(".cell.closed")::pluck("dataset"),
+  }
+
+  // ACTIONS
+  let actions = {
+    open: intents.open
       ::rejectBy(derived.isLocked)
       ::rejectBy(derived.isWin)
       .share(),
@@ -105,7 +109,7 @@ let main = (src) => {
     derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
     derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
 
-    intents.open::toOverState("board", (cell) => (state) => {
+    actions.open::toOverState("board", (cell) => (state) => {
       let ls = stateLens(Number(cell.row), Number(cell.col))
       return R.set(ls, 1, state)
     }).share()
