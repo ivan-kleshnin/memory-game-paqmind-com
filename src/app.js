@@ -1,7 +1,7 @@
 let R = require("ramda")
 let {addIndex, all, chain, compose, curry, equals, head, identity, length, map, merge, sum, tail, update} = require("ramda")
 // let Class = require("classnames")
-let {Observable} = require("rx")
+let {Observable: $} = require("rx")
 let Cycle = require("@cycle/core")
 let {a, div, makeDOMDriver, h1, span} = require("@cycle/dom")
 let {derive, overState, rejectBy, store, toOverState, view} = require("./rx.utils.js")
@@ -100,8 +100,8 @@ let main = (src) => {
       .share(),
   }
 
-  // UPDATE
-  let update = Observable.merge(
+  // STATE
+  let state = store(seeds, $.merge(
     derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
     derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
 
@@ -109,10 +109,7 @@ let main = (src) => {
       let ls = stateLens(Number(cell.row), Number(cell.col))
       return R.set(ls, 1, state)
     }).share()
-  )
-
-  // STATE
-  let state = store(seeds, update)
+  ))
 
   // CYCLE
   return {
