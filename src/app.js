@@ -7,7 +7,7 @@ let {a, makeDOMDriver} = require("@cycle/dom")
 let {makeURLDriver, makeConsoleDriver} = require("./drivers")
 let {pluck, store, view} = require("./rx.utils.js")
 let {isActiveUrl, isActiveRoute} = require("./routes")
-let seeds = require("./seeds")
+let seeds = require("./seeds/app")
 require("./styles/index.less")
 
 // main :: {Observable *} -> {Observable *}

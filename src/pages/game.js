@@ -3,13 +3,11 @@ let {addIndex, all, always, compose, equals, chain, curry, identity, head, lengt
 let {decode} = require("ent")
 let {Observable: $} = require("rx")
 let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
-
-let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../../rx.utils")
-let {boardSize, maxOpenCells} = require("../../rules")
-let {makeLetterBoard} = require("../../makers")
-let menu = require("../../chunks/menu")
-
-let seeds = require("./seeds")
+let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
+let {boardSize, maxOpenCells} = require("../rules")
+let {makeLetterBoard} = require("../makers")
+let seeds = require("../seeds/game")
+let menu = require("../chunks/menu")
 
 let mapi = addIndex(map)
 

@@ -5,10 +5,10 @@ let {withSuffix} = require("./helpers")
 
 // TODO define document title here?!
 let routes = [
-  [new Route("/"), require("./pages/game/app")],
-  [new Route("/help"), require("./pages/help/app")],
-  [new Route("/records"), require("./pages/records/app")],
-  [new Route("/*path"), require("./pages/not-found/app")],
+  [new Route("/"), require("./pages/game")],
+  [new Route("/help"), require("./pages/help")],
+  [new Route("/records"), require("./pages/records")],
+  [new Route("/*path"), require("./pages/not-found")],
 ]
 
 // doroute :: [[Route, Component]] -> String -> [String, Params, Component]
