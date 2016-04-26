@@ -1,9 +1,13 @@
-// NORMALIZE
+// NORMALIZE =======================================================================================
 div {
   box-sizing: border-box;
 }
 
-// PAGE
+// PAGE ============================================================================================
+a.active {
+  font-weight: bold;
+}
+
 body {
   background: #eee;
   //font-family: Calibri, sans-serif;
@@ -46,37 +50,36 @@ body {
     height: @gridStep;
     width: @gridStep;
     text-align: center;
+
     &:before {
       font-style: normal;
       display: inline-block;
       line-height: @gridStep;
       vertical-align: middle;
     }
+
     &.closed {
       cursor: pointer;
+
       &:before {
         color: black;
       }
     }
+
     &.opened {
       &:before {
         opacity: 0.1;
       }
     }
+
     &.done {
       opacity: 0;
     }
-    //&.gray {color: gray;}
-
-    //&.opacity-20 {opacity: 0.2;}
-    //&.opacity-50 {opacity: 0.5;}
   }
 }
 
 .board {
   @gridStep: 60px;
-//  background: #fff;
-//  border: 2px solid #000;
   .setup-board(@gridStep);
 //  &.big {
 //    @gridStep: 100px;
