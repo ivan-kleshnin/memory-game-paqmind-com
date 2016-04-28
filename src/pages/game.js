@@ -5,7 +5,7 @@ let {Observable: $} = require("rx")
 let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
 let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
 let {boardSize, maxOpenCells} = require("../rules")
-let {makeLetterBoard} = require("../makers")
+let {randomLetterBoard} = require("../makers")
 let seeds = require("../seeds/game")
 let menu = require("../chunks/menu")
 
@@ -125,7 +125,7 @@ module.exports = function (src) {
       return R.set(ls, 1, state)
     }),
 
-    intents.restartGame::setState("board", makeLetterBoard(...boardSize))
+    intents.restartGame::setState("board", randomLetterBoard(...boardSize))
   ))
 
   // DOM

@@ -1,8 +1,8 @@
 let {boardSize} = require("../rules")
-let {makeLetterBoard} = require("../makers")
+let {randomLetterBoard} = require("../makers")
 
 let seeds = {
-  board: makeLetterBoard(...boardSize),
+  board: randomLetterBoard(...boardSize),
 }
 
 module.exports = seeds

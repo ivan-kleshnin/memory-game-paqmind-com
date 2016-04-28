@@ -1,18 +1,18 @@
 let {concat, length, map, range, repeat, splitEvery, sum, unnest} = require("ramda")
 let {maxOpenCells} = require("./rules")
 let {shuffle} = require("./helpers")
-let {Board} = require("./types")
+let {board} = require("./types")
 
-let makeLetterBoard = (rowsM, colsN) => {
-  let total = rowsM * colsN
+let randomLetterBoard = (m, n) => {
+  let total = m * n
   if (total % maxOpenCells) {
-    throw Error(`rowsM * colsN must be divisible on ${maxOpenCells}, got ${rowsM} * ${colsN} = ${total}`)
+    throw Error(`m * n must be divisible on ${maxOpenCells}, got ${m} * ${n} = ${total}`)
   }
   let partialLetters = map((x) => String.fromCharCode(65 + x), range(0, total / maxOpenCells)) // (97 + x) for lowercase
   let fullLetters = unnest(repeat(partialLetters, maxOpenCells))
   let letters = shuffle(fullLetters)
   let cells = map((l) => [l, 0], letters)
-  return Board(rowsM, colsN)(splitEvery(colsN, cells))
+  return board(m, n)(splitEvery(n, cells))
 }
 
-exports.makeLetterBoard = makeLetterBoard
+exports.randomLetterBoard = randomLetterBoard
