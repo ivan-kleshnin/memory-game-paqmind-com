@@ -4,12 +4,14 @@ let {decode} = require("ent")
 let {Observable: $} = require("rx")
 let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
 let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
-let {boardSize, maxOpenCells} = require("../rules")
+let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
 let {randomLetterBoard} = require("../makers")
 let seeds = require("../seeds/game")
 let menu = require("../chunks/menu")
 
 let mapi = addIndex(map)
+
+let chaini = addIndex(chain)
 
 let payloadLens = curry((i, j) => compose(R.lensIndex(i), R.lensIndex(j), R.lensIndex(0)))
 
@@ -23,7 +25,7 @@ let total = (board) => sum(map(length, board))
 
 let aboutToClose = (board) => {
   let opened = keepState(1, board)
-  if (opened.length >= maxOpenCells) {
+  if (opened.length >= MAX_OPEN_CELLS) {
     return !allEqual(opened)
   } else {
     return false
@@ -32,7 +34,7 @@ let aboutToClose = (board) => {
 
 let aboutToDone = (board) => {
   let opened = keepState(1, board)
-  if (opened.length >= maxOpenCells) {
+  if (opened.length >= MAX_OPEN_CELLS) {
     return allEqual(opened)
   } else {
     return false
@@ -41,7 +43,7 @@ let aboutToDone = (board) => {
 
 let aboutToLock = (board) => {
   let opened = keepState(1, board)
-  return opened.length >= maxOpenCells
+  return opened.length >= MAX_OPEN_CELLS
 }
 
 let aboutToWin = (board) => {
@@ -57,7 +59,7 @@ let doneOpened = (board) => {
   return map(map((c) => c[1] == 1 ? [c[0], 2] : c), board)
 }
 
-// renderCell :: Cell -> VNode
+// Cell -> VNode
 let renderCell = curry((i, j, cell) => {
   let attrs = {attributes: {"data-row": i, "data-col": j}}
   if (cell[1] == 2) {
@@ -69,16 +71,16 @@ let renderCell = curry((i, j, cell) => {
   }
 })
 
-// renderBoard :: [[Cell]] -> VNode
+// [[Cell]] -> VNode
 let renderBoard = (board) => {
   let rowsM = board.length
   let colsN = board[0] ? board[0].length : 0
   return div(`.board.rows-${rowsM}.cols-${colsN}`,
-    mapi((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
+    chaini((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
   )
 }
 
-// renderWinScreen :: () -> VNode
+// () -> VNode
 let renderWinScreen = (navi) => {
   return div([
     h3("You win!"),
@@ -86,7 +88,7 @@ let renderWinScreen = (navi) => {
   ])
 }
 
-// :: {Observable *} -> {Observable *}
+// {Observable *} -> {Observable *}
 module.exports = function (src) {
   let clickFrom = (s) => src.DOM.select(s).events("click").pluck("target").share()
 
@@ -125,7 +127,7 @@ module.exports = function (src) {
       return R.set(ls, 1, state)
     }),
 
-    intents.restartGame::setState("board", randomLetterBoard(...boardSize))
+    intents.restartGame::setState("board", randomLetterBoard(...BOARD_SIZE))
   ))
 
   // DOM

@@ -10,7 +10,7 @@ let {isActiveUrl, isActiveRoute} = require("./routes")
 let seeds = require("./seeds/app")
 require("./styles/index.less")
 
-// main :: {Observable *} -> {Observable *}
+// {Observable *} -> {Observable *}
 let main = function (src) {
   // CURRENT PAGE
   let page = src.navi

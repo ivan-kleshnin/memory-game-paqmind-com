@@ -11,7 +11,7 @@ let routes = [
   [new Route("/*path"), require("./pages/not-found")],
 ]
 
-// doroute :: [[Route, Component]] -> String -> [String, Params, Component]
+// [[Route, Component]] -> String -> [String, Params, Component]
 let doroute = curry((routes, url) => {
   let match = find(([r, _]) => r.match(url), routes)
   if (match) {
@@ -22,7 +22,7 @@ let doroute = curry((routes, url) => {
   }
 })
 
-// unroute :: [[Route, Component]] -> String -> Params -> String
+// [[Route, Component]] -> String -> Params -> String
 let unroute = curry((routes, route, params) => {
   let match = find(([r, _]) => r.spec == route, routes)
   if (match) {
@@ -32,7 +32,7 @@ let unroute = curry((routes, route, params) => {
   }
 })
 
-// isActiveUrl :: String -> String -> Boolean
+// String -> String -> Boolean
 let isActiveUrl = curry((baseUrl, currentUrl, url) => {
   baseUrl = withSuffix("/", Url.parse(baseUrl).pathname)
   currentUrl = withSuffix("/", Url.parse(currentUrl).pathname)
@@ -44,7 +44,7 @@ let isActiveUrl = curry((baseUrl, currentUrl, url) => {
   }
 })
 
-// isActiveRoute :: String -> String -> Boolean
+// String -> String -> Boolean
 let isActiveRoute = curry((currentRoute, route) => {
   return route == currentRoute
 })

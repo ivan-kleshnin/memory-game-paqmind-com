@@ -1,4 +1,3 @@
-let {curry, map, repeat} = require("ramda")
 let T = require("tcomb")
 
 // Nat, Type -> Type
@@ -27,7 +26,7 @@ let Cell = T.tuple([T.String, CellState])
 // Nat, Nat -> Type
 let board = (m, n) => {
   return matrix(m, n, Cell)
-} 
+}
 
 exports.matrix = matrix
 exports.CellState = CellState
