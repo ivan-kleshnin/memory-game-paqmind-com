@@ -10,7 +10,9 @@ let always = curry((x, y) => x)
 
 // String -> Lens
 let lens = curry((path) => {
-  return R.lensPath(split(".", path))
+  return path ?
+    R.lensPath(split(".", path)) :
+    R.lensPath([])
 })
 
 // (a -> Boolean) -> a -> [a] -> [a]
@@ -131,15 +133,15 @@ let withSuffix = curry((s, st) => {
   else                { return st + s }
 })
 
-exports.fst = fst
-exports.snd = snd
 exports.always = always
 
-exports.lens = lens
-
+exports.fst = fst
+exports.snd = snd
 exports.adjustBy = adjustBy
 exports.updateBy = updateBy
 exports.swap = swap
+
+exports.lens = lens
 
 exports.randomInt = randomInt
 exports.pickRandom = pickRandom
