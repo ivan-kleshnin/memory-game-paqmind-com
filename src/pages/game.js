@@ -1,9 +1,10 @@
 let R = require("ramda")
-let {addIndex, all, always, compose, equals, chain, curry, identity, head, length, map, sum, tail} = require("ramda")
+let {addIndex, all, compose, equals, chain, curry, identity, is, head, length, map, sum, tail} = require("ramda")
 let {decode} = require("ent")
 let {Observable: $} = require("rx")
 let storage = require("store")
 let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
+let {always} = require("../helpers")
 let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
 let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
 let {randomLetterBoard} = require("../makers")
@@ -122,7 +123,7 @@ module.exports = function (src) {
   }
 
   // STATE 2
-  let state2 = store(storage.get("state2") || seeds, $.merge(
+  let state2 = store(seeds, $.merge(
     derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
     derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
 
@@ -131,7 +132,9 @@ module.exports = function (src) {
       return R.set(ls, 1, state)
     }),
 
-    intents.restartGame::setState("board", randomLetterBoard(...BOARD_SIZE))
+    intents.restartGame::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
+
+    src.state2Storage::toState("")
   ))
 
   // DOM

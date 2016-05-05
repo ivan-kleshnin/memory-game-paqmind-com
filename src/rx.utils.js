@@ -61,22 +61,6 @@ let store = curry((seed, update) => {
     .shareReplay(1)
 })
 
-// {Observable *} -> Observable {*}
-// let storeUnion = curry((state) => {
-//   let flatState = flattenObject(state)
-//   let names = keys(flatState)
-//   return $.combineLatest(
-//     ...values(flatState),
-//     (...args) => {
-//       return unflattenObject(reduce((memo, i) => {
-//         return assoc(names[i], args[i], memo)
-//       }, {}, range(0, names.length)))
-//     }
-//   )
-//     .distinctUntilChanged()
-//     .shareReplay(1)
-// })
-
 // Apply fn to upstream value, apply resulting function to state fragment
 // (Observable uv ->) String, (uv -> (sv -> sv)) -> Observable fn
 let toOverState = function (path, fn) {
@@ -139,7 +123,6 @@ exports.derive = derive
 exports.deriveN = deriveN
 
 exports.store = store
-// exports.storeUnion = storeUnion
 
 exports.toOverState = toOverState
 exports.toSetState = toSetState

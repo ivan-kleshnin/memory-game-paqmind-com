@@ -93,7 +93,7 @@ let main = function (src) {
     .delay(1) // shift to the next tick (navi <- routing: immediate)
 
   // STATE
-  let state = store(storage.get("state") || seeds, $.merge(
+  let state = store(seeds, $.merge(
     // ...
     page.flatMapLatest(prop("update"))
   ))
@@ -103,8 +103,10 @@ let main = function (src) {
     navi: navi,
 
     state: state,
+    stateStorage: state,
 
     state2: page.flatMapLatest(prop("state2")),
+    state2Storage: page.flatMapLatest(prop("state2")),
 
     log: page.flatMapLatest(prop("log")),
 
@@ -115,11 +117,13 @@ let main = function (src) {
 }
 
 Cycle.run(main, {
-  navi: makeLocalStorageDriver("navi"),
+  navi: identity, 
 
-  state: makeLocalStorageDriver("state"),
+  state: identity,
+  stateStorage: makeLocalStorageDriver("state"),
 
-  state2: makeLocalStorageDriver("state2"),
+  state2: identity,
+  state2Storage: makeLocalStorageDriver("state2"),
 
   log: makeLogDriver(),
 

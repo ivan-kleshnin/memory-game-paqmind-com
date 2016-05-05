@@ -1,4 +1,5 @@
-let {Observable: $} = require("rx")
+let {always} = require("./helpers")
+let {Observable: $, ReplaySubject} = require("rx")
 let storage = require("store")
 
 let makeURLDriver = function () {
@@ -20,10 +21,11 @@ let makeLogDriver = function () {
 let makeLocalStorageDriver = function (key) {
   return function (state) {
     let unload = $.fromEvent(window, "unload")
-    state.sample(unload).subscribe((state) => {
-      storage.set(key, state)
+    state.sample(unload).subscribe((x) => {
+      storage.set(key, x)
     })
-    return state
+
+    return $.of(storage.get(key))
   }
 }
 
