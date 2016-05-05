@@ -1,4 +1,4 @@
-let {always} = require("ramda")
+let R = require("ramda")
 let T = require("tcomb")
 
 let Type = T.irreducible("Type", T.isType)
@@ -29,7 +29,7 @@ let matrix = /*T
     return Matrix
   }/*)*/
 
-let CellPayload = T.refinement(T.String, always(true), "CellPayload")
+let CellPayload = T.refinement(T.String, R.T, "CellPayload")
 
 let CellState = T.refinement(NatNumber, (x) => {
   // 0: closed, 1: opened, 2: done

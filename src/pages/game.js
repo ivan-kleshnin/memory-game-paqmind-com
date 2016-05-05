@@ -2,6 +2,7 @@ let R = require("ramda")
 let {addIndex, all, always, compose, equals, chain, curry, identity, head, length, map, sum, tail} = require("ramda")
 let {decode} = require("ent")
 let {Observable: $} = require("rx")
+let storage = require("store")
 let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
 let {derive, overState, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
 let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
@@ -75,16 +76,19 @@ let renderCell = curry((i, j, cell) => {
 let renderBoard = (board) => {
   let rowsM = board.length
   let colsN = board[0] ? board[0].length : 0
-  return div(`.board.rows-${rowsM}.cols-${colsN}`,
-    chaini((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
-  )
+  return div([
+    div(`.board.rows-${rowsM}.cols-${colsN}`,
+      chaini((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
+    ),
+    p(a(".restart", {href: "#restart"}, "Restart"))
+  ])
 }
 
 // () -> VNode
 let renderWinScreen = (navi) => {
   return div([
     h3("You win!"),
-    p(a(".restart", {href: "#restart"}, "Try again"))
+    p(a(".restart", {href: "#restart"}, "Restart"))
   ])
 }
 
@@ -118,7 +122,7 @@ module.exports = function (src) {
   }
 
   // STATE 2
-  let state2 = store(seeds, $.merge(
+  let state2 = store(storage.get("state2") || seeds, $.merge(
     derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
     derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
 

@@ -1,23 +1,35 @@
-let {identity, merge, prop} = require("ramda")
+let {identity, merge, prop, propOr} = require("ramda")
 let Url = require("url")
 let Class = require("classnames")
 let {Observable: $, ReplaySubject} = require("rx")
+let storage = require("store")
 let Cycle = require("@cycle/core")
 let {a, makeDOMDriver} = require("@cycle/dom")
-let {makeURLDriver, makeLogDriver} = require("./drivers")
+let {makeURLDriver, makeLogDriver, makeLocalStorageDriver} = require("./drivers")
 let {pluck, store, view} = require("./rx.utils.js")
 let {isActiveUrl, isActiveRoute} = require("./routes")
 let seeds = require("./seeds/app")
 require("./styles/index.less")
 
-// {Observable *} -> {Observable *}
+// main :: {Observable *} -> {Observable *}
 let main = function (src) {
   // CURRENT PAGE
   let page = src.navi
     .sample(src.navi::view("route")) // remount only when page *type* changes...
-    .map((navi) => {
-      let state2 = new ReplaySubject(1)
-      let sources = merge(src, {state2})
+    .scan((prevPage, navi) => {
+      // Unsubscribe previous page (if there was)
+      if (prevPage.subscriptions) {
+        prevPage.subscriptions.forEach((s) => s.dispose())
+      }
+
+      // Make disposable sinks
+      let sinkProxies = {
+        redirect: new ReplaySubject(1),
+        update: new ReplaySubject(1),
+        DOM: new ReplaySubject(1),
+        log: new ReplaySubject(1),
+        state2: new ReplaySubject(1),
+      }
 
       // Run page
       let sinks = merge({
@@ -26,19 +38,18 @@ let main = function (src) {
         log: $.empty(),      // affects log
         DOM: $.empty(),      // affects DOM
         state2: $.empty(),   // nested state loop
-      }, navi.page(sources))
+      }, navi.page(merge(src, {state2: sinkProxies.state2})))
 
+      // Subscribe current page
       let subscriptions = [
-        sinks.state2.subscribe(state2.asObserver()),
+        sinks.redirect.subscribe(sinkProxies.redirect.asObserver()),
+        sinks.update.subscribe(sinkProxies.update.asObserver()),
+        sinks.DOM.subscribe(sinkProxies.DOM.asObserver()),
+        sinks.log.subscribe(sinkProxies.log.asObserver()),
+        sinks.state2.subscribe(sinkProxies.state2.asObserver()),
       ]
 
-      return {navi, sinks, subscriptions}
-    })
-    .scan((prevPage, currPage) => {
-      if (prevPage.subscriptions) {
-        prevPage.subscriptions.forEach((s) => s.dispose())
-      }
-      return currPage
+      return {navi, sinks: sinkProxies, subscriptions}
     }, {})
     .pluck("sinks")
     .shareReplay(1)
@@ -56,7 +67,7 @@ let main = function (src) {
 
   // NAVI
   let navi = $.merge(intents.redirect, page.flatMapLatest(prop("redirect")))
-    .startWith(window.location.pathname)
+    .startWith(propOr(window.location.pathname + window.location.search, "url")(storage.get("navi")))
     .distinctUntilChanged()
     .map((url) => {
       let [route, params, page] = window.doroute(url)
@@ -82,7 +93,7 @@ let main = function (src) {
     .delay(1) // shift to the next tick (navi <- routing: immediate)
 
   // STATE
-  let state = store(seeds, $.merge(
+  let state = store(storage.get("state") || seeds, $.merge(
     // ...
     page.flatMapLatest(prop("update"))
   ))
@@ -93,6 +104,8 @@ let main = function (src) {
 
     state: state,
 
+    state2: page.flatMapLatest(prop("state2")),
+
     log: page.flatMapLatest(prop("log")),
 
     DOM: page.flatMapLatest(prop("DOM")),
@@ -102,9 +115,11 @@ let main = function (src) {
 }
 
 Cycle.run(main, {
-  navi: identity,
+  navi: makeLocalStorageDriver("navi"),
 
-  state: identity,
+  state: makeLocalStorageDriver("state"),
+
+  state2: makeLocalStorageDriver("state2"),
 
   log: makeLogDriver(),
 

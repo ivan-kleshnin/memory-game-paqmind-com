@@ -1,3 +1,6 @@
+let {Observable: $} = require("rx")
+let storage = require("store")
+
 let makeURLDriver = function () {
   return function (url) {
     url.subscribe((url) => {
@@ -14,5 +17,16 @@ let makeLogDriver = function () {
   }
 }
 
+let makeLocalStorageDriver = function (key) {
+  return function (state) {
+    let unload = $.fromEvent(window, "unload")
+    state.sample(unload).subscribe((state) => {
+      storage.set(key, state)
+    })
+    return state
+  }
+}
+
 exports.makeURLDriver = makeURLDriver
 exports.makeLogDriver = makeLogDriver
+exports.makeLocalStorageDriver = makeLocalStorageDriver
