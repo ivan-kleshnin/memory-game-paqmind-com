@@ -1,4 +1,4 @@
-let {identity, merge, prop, propOr} = require("ramda")
+let {identity, merge, prop} = require("ramda")
 let Url = require("url")
 let Class = require("classnames")
 let {Observable: $, ReplaySubject} = require("rx")
@@ -67,7 +67,7 @@ let main = function (src) {
 
   // NAVI
   let navi = $.merge(intents.redirect, page.flatMapLatest(prop("redirect")))
-    .startWith(propOr(window.location.pathname + window.location.search, "url")(storage.get("navi")))
+    .startWith(window.location.pathname)
     .distinctUntilChanged()
     .map((url) => {
       let [route, params, page] = window.doroute(url)
