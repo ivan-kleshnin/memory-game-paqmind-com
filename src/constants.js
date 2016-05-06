@@ -1,0 +1,5 @@
+let BOARD_SIZE = [4, 6]
+let MAX_OPEN_CELLS = 2
+
+exports.BOARD_SIZE = BOARD_SIZE
+exports.MAX_OPEN_CELLS = MAX_OPEN_CELLS
