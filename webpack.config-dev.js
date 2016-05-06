@@ -44,8 +44,8 @@ module.exports = {
       // LESS: github.com/webpack/less-loader
       {test: /\.(less(\?.*)?)$/, loaders: ["style", "css", "less"]},
 
-      // JSON:
-      {test: /\.(json(\?.*)?)$/, loaders: ["json"]},
+      // JSON: github.com/webpack/json-loader
+      {test: /\.(json(\?.*)?)$/,  loaders: ["json"]},
     ],
   },
 }
