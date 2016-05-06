@@ -1,28 +1,64 @@
+// VARIABLES =======================================================================================
+// Background
+@bgColor: #eee;
+
+// Text
+@textFontFamily: "Source Sans Pro", Helvetica, sans-serif;
+@titleFontFamily: "Nunito", Georgia, serif;
+@textFontSize: 20px;
+@lineHeight: 1.5rem;
+
 // NORMALIZE =======================================================================================
-div {
+* {
   box-sizing: border-box;
+}
+html {
+  font-size: @textFontSize;
+  height: 100%;
 }
 
 // PAGE ============================================================================================
+body {
+  background: @bgColor;
+  font-family: @textFontFamily;
+  margin: 0;
+  padding: 0;
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    #header {
+      flex: none;
+      margin-bottom: 1rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+    #content {
+      flex: 1 0 auto;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #footer {
+      flex: none;
+      font-size: 0.85rem;
+      height: 3rem;
+      text-align: center;
+    }
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: @titleFontFamily;
+}
+
 a.active {
   font-weight: bold;
 }
 
-body {
-  background: #eee;
-  //font-family: Calibri, sans-serif;
-  //font-size: 400%;
-  //padding: 50px;
-}
-
-//.content {
-//	max-width: 1000px;
-//}
-//
-//
-//// BOARD
+// BOARD ===========================================================================================
 .setup-board(@gridStep) {
   font-size: @gridStep;
+
   &.cols-1 {width: @gridStep * 1}
   &.cols-2 {width: @gridStep * 2}
   &.cols-3 {width: @gridStep * 3}
@@ -44,42 +80,11 @@ body {
   &.rows-8 {height: @gridStep * 8}
   &.rows-9 {height: @gridStep * 9}
   &.rows-10 {height: @gridStep * 10}
-
-  span {
-    float: left;
-    height: @gridStep;
-    width: @gridStep;
-    text-align: center;
-
-    &:before {
-      font-style: normal;
-      display: inline-block;
-      line-height: @gridStep;
-      vertical-align: middle;
-    }
-
-    &.closed {
-      cursor: pointer;
-
-      &:before {
-        color: black;
-      }
-    }
-
-    &.opened {
-      &:before {
-        opacity: 0.1;
-      }
-    }
-
-    &.done {
-      opacity: 0;
-    }
-  }
 }
 
 .board {
   @gridStep: 60px;
+  @cellMargin: 1px;
   .setup-board(@gridStep);
 //  &.big {
 //    @gridStep: 100px;
@@ -89,17 +94,76 @@ body {
 //    @gridStep: 10px;
 //    .setup-board(@gridStep);
 //  }
-  font-size: 68px;
-}
 
-.cell {
-  position: relative
-}
+  .cell {
+    margin: @cellMargin;
+    border-radius: 0.05em;
 
-.payload {
-  position: absolute;
-  left: 0;
-  top: 0;
-  line-height: 60px;
-  font-size: 50%;
+    float: left;
+    height: @gridStep - @cellMargin * 2;
+    width: @gridStep - @cellMargin * 2;
+
+    .card {
+      cursor: pointer;
+      display: block;
+      font-size: 50%;
+      height: 100%;
+      line-height: @gridStep;
+      text-align: center;
+      width: 100%;
+
+      &.hidden {
+        visibility: hidden;
+      }
+
+      .front {
+        background-color: black;
+        color: white;
+      }
+
+      .back {
+        background-color: white;
+        color: black;
+      }
+    }
+
+    .card.flipper {
+      position: relative;
+      perspective: 1000;
+      transition: 0.6s;
+      transform-style: preserve-3d;
+
+      .front, .back {
+        backface-visibility: hidden;
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        transform: rotateY(0deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      .front {
+        transform: rotateY(0deg);
+        z-index: 2;
+      }
+
+      .back {
+        transform: rotateY(-180deg);
+      }
+
+      &.flipped {
+        cursor: default;
+
+        .front {
+          transform: rotateY(180deg);
+        }
+        .back {
+          transform: rotateY(0deg);
+        }
+      }
+    }
+  }
 }
