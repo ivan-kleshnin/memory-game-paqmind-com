@@ -1,3 +1,4 @@
+require("babel-polyfill")
 let {identity, merge, prop} = require("ramda")
 let Url = require("url")
 let Class = require("classnames")
