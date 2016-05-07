@@ -63,11 +63,11 @@ let doneOpened = (board) => {
 
 // renderCell :: Cell -> String
 let renderCell = curry((i, j, cell) => {
-  let cellAttrs = {attributes: {"data-row": i, "data-col": j}}
+  let cellAttrs = {dataset: {row: i, col: j}}
   if (cell[1] == 0) {
     // closed
     return span(".cell", cellAttrs,
-      span(".card.flipper", {attributes: {"data-state": 0}}, [
+      span(".card.flipper", {dataset: {state: 0}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
@@ -75,7 +75,7 @@ let renderCell = curry((i, j, cell) => {
   } else if (cell[1] == 1) {
     // opened
     return span(".cell", cellAttrs,
-      span(".card.flipper.flipped", {attributes: {"data-state": 1}}, [
+      span(".card.flipper.flipped", {dataset: {state: 1}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
@@ -83,7 +83,7 @@ let renderCell = curry((i, j, cell) => {
   } else {
     // done
     return span(".cell", cellAttrs,
-      span(".card.flipper.hidden", {attributes: {"data-state": 2}}, [
+      span(".card.flipper.hidden", {dataset: {state: 2}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
