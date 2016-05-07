@@ -1,15 +1,20 @@
 // VARIABLES =======================================================================================
+// colors
+@red: #d94f5c;
+
 // Background
 @bgColor: #eee;
 
 // Text
-@textFontFamily: "Source Sans Pro", Helvetica, sans-serif;
+@color: #000;
+@boardFontFamily: "Source Sans Pro", Helvetica, sans-serif;
+@textFontFamily: "Josefin Sans", "Source Sans Pro", Helvetica, sans-serif;
 @titleFontFamily: "Nunito", Georgia, serif;
 @textFontSize: 20px;
 @lineHeight: 1.5rem;
 
 // NORMALIZE =======================================================================================
-* {
+*, *:after, *:before {
   box-sizing: border-box;
 }
 html {
@@ -19,44 +24,94 @@ html {
 
 // PAGE ============================================================================================
 body {
+  color: @color;
   background: @bgColor;
   font-family: @textFontFamily;
   margin: 0;
   padding: 0;
-  #wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    #header {
-      flex: none;
-      margin-bottom: 1rem;
-      margin-top: 3rem;
-      text-align: center;
-    }
-    #content {
-      flex: 1 0 auto;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #footer {
-      flex: none;
-      font-size: 0.85rem;
-      height: 3rem;
-      text-align: center;
-    }
-  }
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: @titleFontFamily;
 }
 
-a.active {
-  font-weight: bold;
+a, a:hover, a:focus, a:visited {
+  color: @color;
+  text-decoration: none;
+}
+
+.text {
+  &.center { text-align: center; }
+  &.left { text-align: left; }
+  &.right { text-align: right; }
+}
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  #header {
+    flex: none;
+    margin-bottom: 1rem;
+    margin-top: 3rem;
+    text-align: center;
+  }
+  #content {
+    flex: 1; // for sticky footer
+    .board {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  #footer {
+    flex: none;
+    font-size: 0.85rem;
+    height: 3rem;
+    text-align: center;
+  }
+  .menu {
+    &.center {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      .item {
+        display: flex;
+        height: 2rem;
+        padding: 0 1rem;
+        a {
+          line-height: 2rem;
+        }
+      }
+    }
+    &.bottom-bordered {
+      a {
+        border: 2px solid transparent;
+        display: block;
+        position: relative;
+        transition: all 0.3s;
+        &:hover, &.active {
+          border-bottom: 2px solid @red;
+        }
+      }
+    }
+    &.bordered {
+      a {
+        border: 2px solid transparent;
+        display: block;
+        padding: 0 0.5rem;
+        position: relative;
+        transition: all 0.3s;
+        &:hover, &.active {
+          border: 2px solid @red;
+        }
+      }
+    }
+  }
 }
 
 // BOARD ===========================================================================================
 .setup-board(@gridStep) {
+  font-family: @boardFontFamily;
   font-size: @gridStep;
 
   &.cols-1 {width: @gridStep * 1}

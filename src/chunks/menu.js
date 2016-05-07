@@ -2,9 +2,9 @@ let {div} = require("@cycle/dom")
 
 module.exports = function ({navi}) {
   let {aa} = navi
-  return div([
-    div(aa({href: "/"}, "Game")),
-    div(aa({href: "/help"}, "Help")),
-    div(aa({href: "/records"}, "Records")),
+  return div(".menu.center.bottom-bordered", [
+    div(".item", aa({href: "/"}, "Game")),
+    div(".item", aa({href: "/help"}, "Help")),
+    div(".item", aa({href: "/records"}, "Records")),
   ])
 }
