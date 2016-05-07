@@ -119,7 +119,7 @@ module.exports = (src) => {
   let board = src.state2::view("board")
 
   let derived = {
-    isLocked: derive(aboutToLock, board),
+    isLocked: derive(aboutToLock, board).combineLatest(src.state2::view("lockedForAnimation"), (x, y) => x || y),
     isAboutToClose: derive(aboutToClose, board),
     isAboutToDone: derive(aboutToDone, board),
     isWin: derive(aboutToWin, board),
@@ -151,7 +151,12 @@ module.exports = (src) => {
       return R.set(ls, 1, state)
     }),
 
-    intents.restartGame::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
+    // Restart game: close cards, then change content, with a time to end animations
+    intents.restartGame::setState("lockedForAnimation", true),
+    intents.restartGame.delay(1000)::setState("lockedForAnimation", false),
+
+    intents.restartGame::overState("board", closeOpened),
+    intents.restartGame.delay(1000)::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
 
     src.state2Storage::toState("")
   ))
