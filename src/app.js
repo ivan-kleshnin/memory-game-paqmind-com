@@ -118,7 +118,7 @@ let main = function (src) {
 }
 
 Cycle.run(main, {
-  navi: identity, 
+  navi: identity,
 
   state: identity,
   stateStorage: makeLocalStorageDriver("state"),

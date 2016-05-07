@@ -25,7 +25,7 @@ let makeLocalStorageDriver = function (key) {
       storage.set(key, x)
     })
 
-    return $.of(storage.get(key))
+    return storage.get(key) ? $.of(storage.get(key)) : $.empty()
   }
 }
 
