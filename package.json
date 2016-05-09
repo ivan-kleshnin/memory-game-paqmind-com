@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.config-dev.js --content-base public/ --inline --progress",
-    "dist": "webpack --config webpack.config-prod.js"
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config-dev.js --content-base public/ --inline --progress",
+    "dist": "NODE_ENV=production webpack --config webpack.config-prod.js"
   },
   "dependencies": {
     "@cycle/core": "^6.0.3",
@@ -24,6 +24,7 @@
     "json-loader": "^0.5.4",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
+    "postcss-loader": "^0.9.1",
     "ramda": "^0.21.0",
     "route-parser": "0.0.5",
     "rx": "^4.1.0",
