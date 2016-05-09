@@ -45,6 +45,10 @@ a, a:hover, a:focus, a:visited {
   &.left { text-align: left; }
   &.right { text-align: right; }
 }
+.hidden {
+  visibility: hidden;
+}
+
 #wrapper {
   display: flex;
   flex-direction: column;
@@ -164,29 +168,12 @@ a, a:hover, a:focus, a:visited {
       font-size: 50%;
       height: 100%;
       line-height: @gridStep;
-      text-align: center;
-      width: 100%;
-
-      &.hidden {
-        visibility: hidden;
-      }
-
-      .front {
-        background-color: black;
-        color: white;
-      }
-
-      .back {
-        background-color: white;
-        color: black;
-      }
-    }
-
-    .card.flipper {
       position: relative;
       perspective: 1000px;
       transition: 0.6s;
       transform-style: preserve-3d;
+      text-align: center;
+      width: 100%;
 
       .front, .back {
         backface-visibility: hidden;
@@ -201,11 +188,15 @@ a, a:hover, a:focus, a:visited {
       }
 
       .front {
+        background-color: black;
+        color: white;
         transform: rotateY(0deg);
         z-index: 2;
       }
 
       .back {
+        background-color: white;
+        color: black;
         transform: rotateY(-180deg);
       }
 

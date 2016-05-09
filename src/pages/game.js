@@ -67,7 +67,7 @@ let renderCell = curry((i, j, cell) => {
   if (cell[1] == 0) {
     // closed
     return span(".cell", cellAttrs,
-      span(".card.flipper", {dataset: {state: 0}}, [
+      span(".card", {dataset: {state: 0}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
@@ -75,7 +75,7 @@ let renderCell = curry((i, j, cell) => {
   } else if (cell[1] == 1) {
     // opened
     return span(".cell", cellAttrs,
-      span(".card.flipper.flipped", {dataset: {state: 1}}, [
+      span(".card.flipped", {dataset: {state: 1}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
@@ -83,7 +83,7 @@ let renderCell = curry((i, j, cell) => {
   } else {
     // done
     return span(".cell", cellAttrs,
-      span(".card.flipper.hidden", {dataset: {state: 2}}, [
+      span(".card.hidden", {dataset: {state: 2}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
