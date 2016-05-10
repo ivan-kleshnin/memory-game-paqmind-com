@@ -176,7 +176,7 @@ module.exports = (src) => {
       ])
 
       let footer = div("#footer", [
-        p(".copyright", [decode("&copy;"), " Paqmind team, 2016"]),
+        p(".copyright", [decode("&copy;"), " ", a({href: "http://paqmind.com", target: "_blank"}, "Paqmind team"), ", 2016"]),
       ])
 
       let content = isWin ?
