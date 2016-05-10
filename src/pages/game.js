@@ -3,7 +3,7 @@ let {addIndex, all, compose, equals, chain, curry, identity, is, head, length, m
 let {decode} = require("ent")
 let {Observable: $} = require("rx")
 let storage = require("store")
-let {a, br, div, h1, h3, p, span} = require("@cycle/dom")
+let {a, br, div, h1, h2, h3, p, span} = require("@cycle/dom")
 let {always} = require("../helpers")
 let {derive, overState, pluck, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
 let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
