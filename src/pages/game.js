@@ -106,9 +106,9 @@ let renderBoard = (board) => {
 }
 
 // () -> VNode
-let renderWinScreen = (navi) => {
+let renderWinScreen = () => {
   return div("#content", [
-    h2(".text.center", "You win!"),
+    h2(".text.center.win-title", "You win!"),
     div(".menu.center.bordered", [
       div(".item", a(".restart", {href: "#restart"}, "Restart")),
     ])

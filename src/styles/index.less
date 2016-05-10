@@ -33,6 +33,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: @titleFontFamily;
+  margin: 1.5rem 0;
 }
 
 a, a:hover, a:focus, a:visited {
@@ -44,24 +45,29 @@ a, a:hover, a:focus, a:visited {
   &.center { text-align: center; }
   &.left { text-align: left; }
   &.right { text-align: right; }
+  &.red { color: @red; }
 }
 .hidden {
   visibility: hidden;
 }
 
 #wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
   #header {
     flex: none;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     margin-top: 3rem;
     text-align: center;
+    .menu {
+      margin-bottom: 0;
+    }
   }
   #content {
-    flex: 1; // for sticky footer
     .board {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .text {
+      max-width: 600px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -111,13 +117,21 @@ a, a:hover, a:focus, a:visited {
       }
     }
   }
+
+}
+
+// skicky footer
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+   #content {
+     flex: 1;
+   }
 }
 
 // BOARD ===========================================================================================
 .setup-board(@gridStep) {
-  font-family: @boardFontFamily;
-  font-size: @gridStep;
-
   &.cols-1 {width: @gridStep * 1}
   &.cols-2 {width: @gridStep * 2}
   &.cols-3 {width: @gridStep * 3}
@@ -155,6 +169,8 @@ a, a:hover, a:focus, a:visited {
 //  }
 
   .cell {
+    font-family: @boardFontFamily;
+    font-size: @gridStep;
     margin: @cellMargin;
     border-radius: 0.05em;
 
@@ -212,4 +228,10 @@ a, a:hover, a:focus, a:visited {
       }
     }
   }
+}
+
+.win-title {
+  color: @red;
+  margin-top: 3rem;
+  margin-bottom: 4.5rem;
 }
