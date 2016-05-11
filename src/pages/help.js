@@ -1,5 +1,5 @@
 let {decode} = require("ent")
-let {a, div, h1, p} = require("@cycle/dom")
+let {a, div, h1, h3, h4, p} = require("@cycle/dom")
 let menu = require("../chunks/menu")
 
 module.exports = function (src) {
@@ -15,7 +15,19 @@ module.exports = function (src) {
       p(".copyright", [decode("&copy;"), " ", a({href: "http://paqmind.com", target: "_blank"}, "Paqmind team"), ", 2016"]),
     ])
 
-    let content = div("#content", [p(".text.center", "[help]")])
+    let content = div("#content.text.center", [
+      h4("Game Rules"),
+      p(`
+        You can consequently flip two cards, turning them face up.
+        If both cards are equal, they are removed from the game. 
+        If they are different, they are turned face down again.
+      `),
+
+      p(`
+        You win if all cards are removed in time.
+        You lose otherwise.
+      `)
+    ])
 
     return div("#wrapper", [header, content, footer])
   })
