@@ -12,6 +12,13 @@ let {isActiveUrl, isActiveRoute} = require("./routes")
 let seeds = require("./seeds/app")
 require("./styles/index.less")
 
+// Set env variable, to use in the template later
+if (process.env.NODE_ENV == "development") {
+  window.env = "development"
+} else if (process.env.NODE_ENV == "production") {
+  window.env = "production"
+}
+
 // main :: {Observable *} -> {Observable *}
 let main = function (src) {
   // CURRENT PAGE

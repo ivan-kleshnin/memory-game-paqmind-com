@@ -38,10 +38,10 @@ module.exports = {
       {test: /\.js$/, loaders: ["babel"], exclude: /node_modules/},
 
       // CSS: github.com/webpack/css-loader
-      {test: /\.(css(\?.*)?)$/, loaders: ["style", "css"]},
+      {test: /\.(css(\?.*)?)$/, loader: ExtractTextPlugin.extract("css!postcss")},
 
       // LESS: github.com/webpack/less-loader
-      {test: /\.(less(\?.*)?)$/, loaders: ["style", "css", "less"]},
+      {test: /\.(less(\?.*)?)$/, loader: ExtractTextPlugin.extract("css!postcss!less")},
 
       // JSON: github.com/webpack/json-loader
       {test: /\.(json(\?.*)?)$/,  loaders: ["json"]},
@@ -53,7 +53,12 @@ module.exports = {
 
   // webpack.github.io/docs/list-of-plugins.html
   plugins: [
-    new ExtractTextPlugin("[name].css", {allChunks: true}),
-    new Webpack.optimize.UglifyJsPlugin({compress: {warnings: false}, mangle: {except: ["$", "window", "document", "console"]}}),
+    new Webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+      },
+    }),
+    new ExtractTextPlugin("[name].css"),
+    new Webpack.optimize.UglifyJsPlugin({compress: {warnings: false}, mangle: {except: ["window", "document", "console"]}}),
   ],
 }

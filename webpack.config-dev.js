@@ -48,4 +48,12 @@ module.exports = {
       {test: /\.(json(\?.*)?)$/,  loaders: ["json"]},
     ],
   },
+
+  plugins: [
+    new Webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+      },
+    }),
+  ],
 }
