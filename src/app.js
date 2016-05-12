@@ -71,32 +71,32 @@ let main = function (src) {
 
       // Make disposable sinks
       let sinkProxies = {
-        state2: new ReplaySubject(1),
         redirect: new ReplaySubject(1),
         update: new ReplaySubject(1),
         DOM: new ReplaySubject(1),
         log: new ReplaySubject(1),
         title: new ReplaySubject(1),
+        state2: new ReplaySubject(1),
       }
 
       // Run page
       let sinks = merge({
-        state2: $.empty(),   // nested state loop
         redirect: $.empty(), // affects navi
         update: $.empty(),   // affects state
         DOM: $.empty(),      // affects DOM
         log: $.empty(),      // affects log
         title: $.empty(),    // affects title
+        state2: $.empty(),   // nested state loop
       }, navi.page(merge(src, {state2: sinkProxies.state2})))
 
       // Subscribe current page
       let subscriptions = [
-        sinks.state2.subscribe(sinkProxies.state2.asObserver()),
         sinks.redirect.subscribe(sinkProxies.redirect.asObserver()),
         sinks.update.subscribe(sinkProxies.update.asObserver()),
         sinks.DOM.subscribe(sinkProxies.DOM.asObserver()),
         sinks.log.subscribe(sinkProxies.log.asObserver()),
         sinks.title.subscribe(sinkProxies.title.asObserver()),
+        sinks.state2.subscribe(sinkProxies.state2.asObserver()),
       ]
 
       return {navi, sinks: sinkProxies, subscriptions}
