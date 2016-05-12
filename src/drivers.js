@@ -11,6 +11,14 @@ let makeURLDriver = () => {
   }
 }
 
+let makeDocumentTitleDriver = () => {
+  return (title) => {
+    title.subscribe((title) => {
+      document.title = title
+    })
+  }
+}
+
 let makeLogDriver = () => {
   return (message) => {
     message.subscribe((message) => {
@@ -47,5 +55,6 @@ let makeLocalStorageDriver = () => {
 }
 
 exports.makeURLDriver = makeURLDriver
+exports.makeDocumentTitleDriver = makeDocumentTitleDriver
 exports.makeLogDriver = makeLogDriver
 exports.makeLocalStorageDriver = makeLocalStorageDriver

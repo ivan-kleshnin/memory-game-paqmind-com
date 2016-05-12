@@ -8,7 +8,7 @@ let Cycle = require("@cycle/core")
 let {a, makeDOMDriver} = require("@cycle/dom")
 let {fst, snd} = require("./helpers")
 let {history, pluck, store, toState, view} = require("./rx.utils.js")
-let {makeURLDriver, makeLogDriver, makeLocalStorageDriver} = require("./drivers")
+let {makeURLDriver, makeDocumentTitleDriver, makeLogDriver, makeLocalStorageDriver} = require("./drivers")
 let {isActiveUrl, isActiveRoute} = require("./routes")
 let seeds = require("./seeds/app")
 require("./styles/index.less")
@@ -204,6 +204,8 @@ let main = function (src) {
 
     URL: navi::view("url"),
 
+    title: page.flatMapLatest(prop("title")),
+
     log: page.flatMapLatest(prop("log")),
 
     localStorage: localStorage,
@@ -222,6 +224,8 @@ Cycle.run(main, {
   DOM: makeDOMDriver("#app"),
 
   URL: makeURLDriver(),
+
+  title: makeDocumentTitleDriver(),
 
   log: makeLogDriver(),
 

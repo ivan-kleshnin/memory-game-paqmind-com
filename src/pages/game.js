@@ -185,6 +185,9 @@ module.exports = (src) => {
       return div("#wrapper", [header, content, footer])
     })
 
+  // TITLE
+  let title = $.of("Game | Memory Game")
+
   // SINKS
-  return {DOM, state2}
+  return {DOM, state2, title}
 }

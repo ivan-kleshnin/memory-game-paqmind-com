@@ -3,7 +3,6 @@ let Url = require("url")
 let Route = require("route-parser")
 let {withSuffix} = require("./helpers")
 
-// TODO define document title here?!
 let routes = [
   [new Route("/"), require("./pages/game")],
   [new Route("/help"), require("./pages/help")],
