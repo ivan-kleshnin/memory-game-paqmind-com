@@ -1,31 +1,48 @@
+let {isNil, propEq} = require("ramda")
 let {always} = require("./helpers")
 let {Observable: $, ReplaySubject} = require("rx")
 let storage = require("store")
 
-let makeURLDriver = function () {
-  return function (url) {
+let makeURLDriver = () => {
+  return (url) => {
     url.subscribe((url) => {
       window.history.pushState(null, "", url) // no associated state, no title
     })
   }
 }
 
-let makeLogDriver = function () {
-  return function (message) {
-    message.subscribe((msg) => {
-      console.log(msg)
+let makeLogDriver = () => {
+  return (message) => {
+    message.subscribe((message) => {
+      console.log(message)
     })
   }
 }
 
-let makeLocalStorageDriver = function (key) {
-  return function (state) {
-    let unload = $.fromEvent(window, "unload")
-    state.sample(unload).subscribe((x) => {
-      storage.set(key, x)
+let makeLocalStorageDriver = () => {
+  return (sink) => {
+    sink.subscribe((data) => {
+      if (isNil(data)) {
+        storage.clear()
+      } else {
+        let {key, value} = data
+        console.log("driver writing", "'" + key + "'", JSON.stringify(value))
+        storage.set(key, value)
+      }
     })
 
-    return storage.get(key) ? $.of(storage.get(key)) : $.empty()
+    return {
+      get: (key) => {
+        console.log("calling get with key '" + key + "'")
+        return sink
+          .filter(propEq("key", key))
+          .pluck("value")
+          .startWith(storage.get(key))
+          .tap((data) => {
+            console.log("driver reading", "'" + key + "'", JSON.stringify(data))
+          })
+      }
+    }
   }
 }
 

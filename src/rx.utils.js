@@ -1,7 +1,7 @@
 let R = require("ramda")
-let {assoc, curry, identity, is, keys, map, not, range, reduce, split, values} = require("ramda")
+let {assoc, curry, identity, is, keys, map, not, range, reduce, repeat, split, values} = require("ramda")
 let {Observable: $} = require("rx")
-let {always, fst, snd, lens} = require("./helpers") // flattenObject, unflattenObject
+let {always, appendSliding, fst, snd, lens} = require("./helpers") // flattenObject, unflattenObject
 
 // s -> (s -> s) -> s
 let scanFn = curry((state, updateFn) => {
@@ -60,6 +60,16 @@ let store = curry((seed, update) => {
     .distinctUntilChanged()
     .shareReplay(1)
 })
+
+let history = function (n) {
+  if (n <= 0) {
+    throw Error("n must be an unsigned integer, got "+ String(n))
+  }
+  let put = appendSliding(n)
+  return this.scan((stateHistory, newState) => {
+    return put(newState, stateHistory)
+  }, repeat(null, n - 1))
+}
 
 // Apply fn to upstream value, apply resulting function to state fragment
 // (Observable uv ->) String, (uv -> (sv -> sv)) -> Observable fn
@@ -123,6 +133,7 @@ exports.derive = derive
 exports.deriveN = deriveN
 
 exports.store = store
+exports.history = history
 
 exports.toOverState = toOverState
 exports.toSetState = toSetState

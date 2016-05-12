@@ -147,6 +147,8 @@ module.exports = (src) => {
 
   // STATE 2
   let state2 = store(seeds, $.merge(
+    src.update2,
+
     derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000), // delay for CSS animation time
     derived.isAboutToDone.filter(identity)::overState("board", doneOpened),
 
@@ -156,13 +158,10 @@ module.exports = (src) => {
     }),
 
     // Restart game: close cards, then change content, with a time to end animations
-    intents.restartGame::setState("lockedForAnimation", true),
-    intents.restartGame.delay(500)::setState("lockedForAnimation", false),
-
     intents.restartGame::overState("board", closeOpened),
+    intents.restartGame::setState("lockedForAnimation", true),
     intents.restartGame.delay(500)::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
-
-    src.state2Storage::toState("")
+    intents.restartGame.delay(500)::setState("lockedForAnimation", false)
   ))
 
   // DOM
