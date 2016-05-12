@@ -1,17 +1,14 @@
 // VARIABLES =======================================================================================
-// colors
+@black: #000;
 @red: #d94f5c;
+@gray: #eee;
 
-// Background
-@bgColor: #eee;
-
-// Text
-@color: #000;
+// TYPOGRAPHY
 @boardFontFamily: "Source Sans Pro", Helvetica, sans-serif;
 @textFontFamily: "Josefin Sans", "Source Sans Pro", Helvetica, sans-serif;
 @titleFontFamily: "Nunito", Georgia, serif;
 @textFontSize: 20px;
-@lineHeight: 1.5rem;
+@unit: 1.5rem;
 
 // NORMALIZE =======================================================================================
 *, *:after, *:before {
@@ -24,8 +21,8 @@ html {
 
 // PAGE ============================================================================================
 body {
-  color: @color;
-  background: @bgColor;
+  color: @black;
+  background: @gray;
   font-family: @textFontFamily;
   margin: 0;
   padding: 0;
@@ -33,11 +30,11 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: @titleFontFamily;
-  margin: 1.5rem 0;
+  margin: @unit 0;
 }
 
 a, a:hover, a:focus, a:visited {
-  color: @color;
+  color: @black;
   text-decoration: none;
 }
 
@@ -54,7 +51,7 @@ a, a:hover, a:focus, a:visited {
 #wrapper {
   #header {
     flex: none;
-    margin-bottom: 1.5rem;
+    margin-bottom: @unit;
     margin-top: 3rem;
     text-align: center;
     .menu {
@@ -82,8 +79,8 @@ a, a:hover, a:focus, a:visited {
     &.center {
       display: flex;
       justify-content: center;
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
+      margin-top: @unit;
+      margin-bottom: @unit;
       .item {
         display: flex;
         height: 2rem;
@@ -231,6 +228,12 @@ a, a:hover, a:focus, a:visited {
 
 .win-title {
   color: @red;
+  margin-top: 3rem;
+  margin-bottom: 4.5rem;
+}
+
+.lose-title {
+  color: black;
   margin-top: 3rem;
   margin-bottom: 4.5rem;
 }
