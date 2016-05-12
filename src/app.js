@@ -108,13 +108,6 @@ let main = function (src) {
   let pageLeave = makePageLeave(pageHistory)
   let pageEnter = makePageEnter(pageHistory)
 
-  pageLeave.subscribe((d) => {
-    console.log("pageLeave:", JSON.stringify(d))
-  })
-  pageEnter.subscribe((d) => {
-    console.log("pageEnter:", JSON.stringify(d))
-  })
-
   // INTENTS
   let intents = {
     redirect: src.DOM.select("a:not([rel=external])")
@@ -160,7 +153,7 @@ let main = function (src) {
 
     // Load state from localStorage
     windowLoad
-      .withLatestFrom(src.localStorage.get(makeStateKey(), (_, s) => s))
+      .withLatestFrom(src.localStorage.get(makeStateKey()), (_, s) => s)
       .filter(identity)
       ::toState("")
   )
