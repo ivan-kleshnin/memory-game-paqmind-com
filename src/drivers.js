@@ -34,21 +34,16 @@ let makeLocalStorageDriver = () => {
         storage.clear()
       } else {
         let {key, value} = data
-        console.log("driver writing", "'" + key + "'", JSON.stringify(value))
         storage.set(key, value)
       }
     })
 
     return {
       get: (key) => {
-        console.log("calling get with key '" + key + "'")
         return sink
           .filter(propEq("key", key))
           .pluck("value")
           .startWith(storage.get(key))
-          .tap((data) => {
-            console.log("driver reading", "'" + key + "'", JSON.stringify(data))
-          })
       }
     }
   }
