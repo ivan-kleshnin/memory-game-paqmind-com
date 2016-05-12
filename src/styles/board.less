@@ -1,0 +1,104 @@
+.setup-board(@gridStep) {
+  &.cols-1 {width: @gridStep * 1}
+  &.cols-2 {width: @gridStep * 2}
+  &.cols-3 {width: @gridStep * 3}
+  &.cols-4 {width: @gridStep * 4}
+  &.cols-5 {width: @gridStep * 5}
+  &.cols-6 {width: @gridStep * 6}
+  &.cols-7 {width: @gridStep * 7}
+  &.cols-8 {width: @gridStep * 8}
+  &.cols-9 {width: @gridStep * 9}
+  &.cols-10 {width: @gridStep * 10}
+
+  &.rows-1 {height: @gridStep * 1}
+  &.rows-2 {height: @gridStep * 2}
+  &.rows-3 {height: @gridStep * 3}
+  &.rows-4 {height: @gridStep * 4}
+  &.rows-5 {height: @gridStep * 5}
+  &.rows-6 {height: @gridStep * 6}
+  &.rows-7 {height: @gridStep * 7}
+  &.rows-8 {height: @gridStep * 8}
+  &.rows-9 {height: @gridStep * 9}
+  &.rows-10 {height: @gridStep * 10}
+}
+
+.board {
+  @gridStep: 60px;
+  @cellMargin: 1px;
+
+  margin-left: auto;
+  margin-right: auto;
+  .setup-board(@gridStep);
+
+  .cell {
+    font-family: @boardFontFamily;
+    font-size: @gridStep;
+    margin: @cellMargin;
+    border-radius: 0.05em;
+
+    float: left;
+    height: @gridStep - @cellMargin * 2;
+    width: @gridStep - @cellMargin * 2;
+
+    .card {
+      cursor: pointer;
+      display: block;
+      font-size: 50%;
+      height: 100%;
+      line-height: @gridStep;
+      position: relative;
+      perspective: 1000px;
+      transition: 0.6s;
+      transform-style: preserve-3d;
+      text-align: center;
+      width: 100%;
+
+      .front, .back {
+        backface-visibility: hidden;
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        transform: rotateY(0deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+
+      .front {
+        background-color: black;
+        color: white;
+        transform: rotateY(0deg);
+        z-index: 2;
+      }
+
+      .back {
+        background-color: white;
+        color: black;
+        transform: rotateY(-180deg);
+      }
+
+      &.flipped {
+        cursor: default;
+
+        .front {
+          transform: rotateY(180deg);
+        }
+        .back {
+          transform: rotateY(0deg);
+        }
+      }
+    }
+  }
+}
+
+.win-title {
+  color: @red;
+  margin-top: @unit * 2;
+  margin-bottom: @unit * 3;
+}
+.lose-title {
+  color: @black;
+  margin-top: @unit * 2;
+  margin-bottom: @unit * 3;
+}

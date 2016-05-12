@@ -1,0 +1,60 @@
+// Set up font size and line-height
+html {
+   font-size: @textFontSize;
+}
+
+body {
+  color: @textColor;
+  font-family: @textFontFamily;
+  line-height: @unit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: @titleFontFamily;
+}
+
+// Control line length
+.container.text {
+  max-width: 40rem; // about 65 Chars per line
+}
+
+// Set up vertical margins for text elements
+p, blockquote, ul, ol, dl {
+  margin: 0 0 @unit 0;
+}
+hr {
+  margin: @unit 0 @unit 0;
+}
+
+// Set up font sizes for header: each header is bigger by 25% as previous one
+h1 { font-size: @textFontSize*1.25*1.25*1.25*1.25*1.25*1.25; }
+h2 { font-size: @textFontSize*1.25*1.25*1.25*1.25*1.25; }
+h3 { font-size: @textFontSize*1.25*1.25*1.25*1.25; }
+h4 { font-size: @textFontSize*1.25*1.25*1.25; }
+h5 { font-size: @textFontSize*1.25*1.25; }
+h6 { font-size: @textFontSize*1.25; }
+
+// Support vertical rhytm by manipulating with line-height and vertical margins
+h1 { line-height: @unit*2.65; margin-top: @unit*2;    margin-bottom: @unit*1.35; } // @unit x 6
+h2 { line-height: @unit*2.65; margin-top: @unit*1.65; margin-bottom: @unit*0.75; } // @unit x 5
+h3 { line-height: @unit*1.65; margin-top: @unit*1.65; margin-bottom: @unit*0.75; } // @unit x 4
+h4 { line-height: @unit*1.65; margin-top: @unit*1.65; margin-bottom: @unit*0.75; } // @unit x 4
+h5 { line-height: @unit;      margin-top: @unit*1.25; margin-bottom: @unit*0.75; } // @unit x 3
+h6 { line-height: @unit;      margin-top: @unit*1.25; margin-bottom: @unit*0.75; } // @unit x 3
+
+// Supported classes
+.h1:extend(h1){}
+.h2:extend(h2){}
+.h3:extend(h3){}
+.h4:extend(h4){}
+.h5:extend(h5){}
+.h6:extend(h6){}
+
+// Grid
+body.lines {
+  background: linear-gradient(
+    to bottom,
+    white, white 95%, #aaa 100%, #aaa
+  );
+  background-size: 100% @unit;
+}
