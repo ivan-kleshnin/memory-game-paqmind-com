@@ -3,7 +3,7 @@ let {addIndex, all, compose, equals, chain, curry, identity, is, head, length, m
 let {decode} = require("ent")
 let {Observable: $} = require("rx")
 let storage = require("store")
-let {a, div, h1, h2, p, span} = require("@cycle/dom")
+let {a, br, div, h1, h2, p, span} = require("@cycle/dom")
 let {always} = require("../helpers")
 let {derive, overState, pluck, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
 let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
@@ -83,7 +83,7 @@ let renderCell = curry((i, j, cell) => {
   } else {
     // done
     return span(".cell", cellAttrs,
-      span(".card.hidden", {dataset: {state: 2}}, [
+      span(".card.flipped.hidden", {dataset: {state: 2}}, [
         span(".front", "?"),
         span(".back", cell[0]),
       ])
@@ -147,8 +147,8 @@ module.exports = (src) => {
 
   // STATE 2
   let state2 = store(seeds, $.merge(
-    derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000),
-    derived.isAboutToDone.filter(identity)::overState("board", doneOpened).delay(1000),
+    derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000), // delay for CSS animation time
+    derived.isAboutToDone.filter(identity)::overState("board", doneOpened),
 
     actions.openCard::toOverState("board", (cell) => (state) => {
       let ls = stateLens(Number(cell.row), Number(cell.col))
@@ -157,10 +157,10 @@ module.exports = (src) => {
 
     // Restart game: close cards, then change content, with a time to end animations
     intents.restartGame::setState("lockedForAnimation", true),
-    intents.restartGame.delay(1000)::setState("lockedForAnimation", false),
+    intents.restartGame.delay(500)::setState("lockedForAnimation", false),
 
     intents.restartGame::overState("board", closeOpened),
-    intents.restartGame.delay(1000)::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
+    intents.restartGame.delay(500)::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
 
     src.state2Storage::toState("")
   ))

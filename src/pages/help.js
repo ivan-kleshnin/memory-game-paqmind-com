@@ -1,5 +1,5 @@
 let {decode} = require("ent")
-let {a, div, h1, h2, h3, h4, h5, h6, p} = require("@cycle/dom")
+let {a, div, h1, h3, h4, p} = require("@cycle/dom")
 let menu = require("../chunks/menu")
 
 module.exports = function (src) {
@@ -16,17 +16,17 @@ module.exports = function (src) {
     ])
 
     let content = div("#content.container.text", [
-      p("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
-      h2("Header H2"),
-      p("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
-      h3("Header H3"),
-      p("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
-      h4("Header H4"),
-      p("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
-      h5("Header H5"),
-      p("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
-      h6("Header H6"),
-      p("The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
+      h4(".text.center", "Game Rules"),
+      p(`
+        You can consequently flip two cards, turning them face up.
+        If both cards are equal, they are removed from the game.
+        If they are different, they are turned face down again.
+      `),
+
+      p(`
+        You win if all cards are removed in time.
+        You lose otherwise.
+      `)
     ])
 
     return div("#wrapper", [header, content, footer])
