@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 
 // Control line length
 .container.text {
-  max-width: 40rem; // about 65 Chars per line
+  max-width: 30rem; // about 65 Chars per line
 }
 
 // Set up vertical margins for text elements
@@ -42,6 +42,15 @@ h4 { line-height: @unit*1.65; margin-top: @unit*1.65; margin-bottom: @unit*0.75;
 h5 { line-height: @unit;      margin-top: @unit*1.25; margin-bottom: @unit*0.75; } // @unit x 3
 h6 { line-height: @unit;      margin-top: @unit*1.25; margin-bottom: @unit*0.75; } // @unit x 3
 
+* > h1:first-child,
+* > h2:first-child,
+* > h3:first-child,
+* > h4:first-child,
+* > h5:first-child,
+* > h6:first-child {
+  margin-top: 0;
+}
+
 // Supported classes
 .h1:extend(h1){}
 .h2:extend(h2){}
@@ -49,6 +58,7 @@ h6 { line-height: @unit;      margin-top: @unit*1.25; margin-bottom: @unit*0.75;
 .h4:extend(h4){}
 .h5:extend(h5){}
 .h6:extend(h6){}
+
 
 // Grid
 body.lines {

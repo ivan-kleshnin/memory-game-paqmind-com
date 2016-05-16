@@ -99,7 +99,10 @@ let renderBoard = (board) => {
     div(`.board.rows-${rowsM}.cols-${colsN}`,
       chaini((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
     ),
-    div(".menu.center.bordered", [
+   div(".status-bar", [
+      span("00:00:00"),
+    ]),
+    div(".actions", [
       div(".item", a(".restart", {href: "#restart"}, "Restart")),
     ])
   ])
@@ -109,7 +112,7 @@ let renderBoard = (board) => {
 let renderWinScreen = () => {
   return div("#content.container", [
     h2(".text.center.win-title", "You win!"),
-    div(".menu.center.bordered", [
+    div(".actions", [
       div(".item", a(".restart", {href: "#restart"}, "Restart")),
     ])
   ])

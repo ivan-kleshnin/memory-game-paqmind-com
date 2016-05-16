@@ -102,3 +102,35 @@
   margin-top: @unit * 2;
   margin-bottom: @unit * 3;
 }
+
+.status-bar {
+  font-size: @textFontSize * 0.9;
+  margin-top: @unit;
+  margin-bottom: @unit;
+  text-align: center;
+}
+
+.actions {
+  font-size: @textFontSize * 1.25;
+  display: flex;
+  justify-content: center;
+  margin-top: @unit;
+  margin-bottom: @unit;
+  .item {
+    display: flex;
+    height: @unit * 2;
+    padding: 0 @unit / 2;
+    a {
+      line-height: @unit * 2;
+      border: 2px solid transparent;
+      display: block;
+      padding: 0 @unit / 2;
+      position: relative;
+      transition: all 0.3s;
+      &:hover, &.active {
+        border: 2px solid @red;
+      }
+    }
+  }
+}
+

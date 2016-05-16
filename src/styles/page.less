@@ -21,7 +21,7 @@ a, a:hover, a:focus, a:visited {
   #header {
     flex: none;
     margin-bottom: @unit;
-    margin-top: @unit * 2;
+    margin-top: @unit * 3;
     text-align: center;
     .menu {
       margin-bottom: 0;
@@ -35,47 +35,6 @@ a, a:hover, a:focus, a:visited {
     margin-top: @unit;
     text-align: center;
   }
-  .menu {
-    font-size: @textFontSize * 1.25;
-    &.center {
-      display: flex;
-      justify-content: center;
-      margin-top: @unit;
-      margin-bottom: @unit;
-      .item {
-        display: flex;
-        height: @unit * 2;
-        padding: 0 @unit / 2;
-        a {
-          line-height: @unit * 2;
-        }
-      }
-    }
-    &.bottom-bordered {
-      a {
-        border: 2px solid transparent;
-        display: block;
-        position: relative;
-        transition: all 0.3s;
-        &:hover, &.active {
-          border-bottom: 2px solid @red;
-        }
-      }
-    }
-    &.bordered {
-      a {
-        border: 2px solid transparent;
-        display: block;
-        padding: 0 @unit / 2;
-        position: relative;
-        transition: all 0.3s;
-        &:hover, &.active {
-          border: 2px solid @red;
-        }
-      }
-    }
-  }
-
 }
 
 // skicky footer

@@ -1,5 +1,5 @@
 let {decode} = require("ent")
-let {a, div, h1, h3, h4, p} = require("@cycle/dom")
+let {a, div, h1, h4, p} = require("@cycle/dom")
 let menu = require("../chunks/menu")
 
 module.exports = function (src) {
