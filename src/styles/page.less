@@ -1,0 +1,46 @@
+// NORMALIZE =======================================================================================
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: @bgColor;
+  margin: 0;
+  padding: 0;
+}
+
+a, a:hover, a:focus, a:visited {
+  color: @textColor;
+  text-decoration: none;
+}
+
+#wrapper { // with sticky footer
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  #header {
+    flex: none;
+    margin-bottom: @unit;
+    margin-top: @unit * 3;
+    text-align: center;
+    #menu {
+      margin-bottom: 0;
+    }
+  }
+
+  #content {
+    flex: 1;
+  }
+
+  #footer {
+    flex: none;
+    height: @unit * 2;
+    margin-top: @unit;
+    text-align: center;
+  }
+}

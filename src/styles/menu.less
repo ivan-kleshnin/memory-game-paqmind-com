@@ -1,0 +1,28 @@
+#menu {
+  font-size: @textFontSize * 1.25;
+  &.center {
+    display: flex;
+    justify-content: center;
+    margin-top: @unit;
+    margin-bottom: @unit;
+    .item {
+      display: flex;
+      height: @unit * 2;
+      padding: 0 @unit / 2;
+      a {
+        line-height: @unit * 2;
+      }
+    }
+  }
+  &.bottom-bordered {
+    a {
+      border: 2px solid transparent;
+      display: block;
+      position: relative;
+      transition: all 0.3s;
+      &:hover, &.active {
+        border-bottom: 2px solid @red;
+      }
+    }
+  }
+}

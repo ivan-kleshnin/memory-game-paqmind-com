@@ -1,14 +1,14 @@
 let {curry} = require("ramda")
 let {decode} = require("ent")
-let {a, div, em, h1, h2, p, small, span} = require("@cycle/dom")
+let {a, div, h1, h2, p, span} = require("@cycle/dom")
 let {chaini, mapi} = require("../helpers/common")
 let {header, footer, menu} = require("./common")
 let gameHelpers = require("../helpers/game")
 
 
 // Game -> VNode
-let screen = (game) => {
-  return div("#content", [
+let content = (game) => {
+  return div(".container#content", [
     status(game),
     canvas(game),
     buttons(game),
@@ -17,14 +17,13 @@ let screen = (game) => {
 
 // Game -> VNode
 let status = (game) => {
-  // TODO refactor (?)
-  return div(".menu.center", [
+  return div(".status-bar", [
     game.started ?
-      div(".item", small(em(a(`Time left: ${game.timeout} s`)))) :
-      div(".item", small(em("Are you ready?"))),
+      span(`Time left: ${game.timeout} s`) :
+      span("Are you ready?"),
 
     game.paused ?
-      div(".item", small(a(`Paused`))) :
+      span(`Paused`) :
       null,
   ])
 }
@@ -42,7 +41,7 @@ let canvas = (game) => {
 
 // Game -> VNode
 let buttons = (game) => {
-  return div(".menu.center.bordered", [
+  return div(".actions", [
     gameHelpers.allowStartGame(game) ?
       div(".item", a(".start", "New Game")) :
       null,
@@ -107,7 +106,7 @@ let cardView = (card) => {
 module.exports = (navi, game, flags) => {
   return div("#wrapper", [
     header(navi),
-    screen(game),
+    content(game),
     footer(),
   ])
 }
