@@ -1,7 +1,8 @@
 let {isNil, propEq} = require("ramda")
-let {always} = require("./helpers")
+let {always} = require("./helpers/common")
 let {Observable: $, ReplaySubject} = require("rx")
 let storage = require("store")
+
 
 let makeURLDriver = () => {
   return (url) => {
@@ -48,6 +49,7 @@ let makeLocalStorageDriver = () => {
     }
   }
 }
+
 
 exports.makeURLDriver = makeURLDriver
 exports.makeDocumentTitleDriver = makeDocumentTitleDriver

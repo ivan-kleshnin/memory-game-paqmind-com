@@ -6,11 +6,11 @@ let {Observable: $, ReplaySubject} = require("rx")
 let storage = require("store")
 let Cycle = require("@cycle/core")
 let {a, makeDOMDriver} = require("@cycle/dom")
-let {fst, snd} = require("./helpers")
-let {history, pluck, store, toState, view} = require("./rx.utils.js")
+let {fst, snd} = require("./helpers/common")
+let {history, view, pluck, store, toState} = require("./rx.utils.js")
 let {makeURLDriver, makeDocumentTitleDriver, makeLogDriver, makeLocalStorageDriver} = require("./drivers")
+let {AppState} = require("./types")
 let {isActiveUrl, isActiveRoute} = require("./routes")
-let seeds = require("./seeds/app")
 require("./styles/index.less")
 
 // storage.clear()
@@ -47,7 +47,7 @@ let makePageLeave = (pageHistory) => {
     )
     .pluck("navi")
     .map(({route, params}) => ({route, params}))
-    .share(1)
+    .share()
 }
 
 let makePageEnter = (pageHistory) => {
@@ -55,11 +55,10 @@ let makePageEnter = (pageHistory) => {
     .map(snd)
     .pluck("navi")
     .map(({route, params}) => ({route, params}))
-    .share(1)
+    .share()
 }
 
-// main :: {Observable *} -> {Observable *}
-let main = function (src) {
+let main = (src) => {
   // CURRENT PAGE
   let pageHistory = src.navi
     .sample(src.navi::view("route")) // remount only when page *type* changes...
@@ -112,7 +111,8 @@ let main = function (src) {
   let intents = {
     redirect: src.DOM.select("a:not([rel=external])")
       .events("click")
-      .filter((event) => !(/:\/\//.test(event.target.getAttribute("href")))) // drop links with protocols (as external)
+      .filter((event) => event.target.getAttribute("href"))                  // ignore links with no href
+      .filter((event) => !(/:\/\//.test(event.target.getAttribute("href")))) // ignore links with protocols (as external)
       .do((event) => event.preventDefault())
       ::pluck("target.href")             // pick normalized property
       .map((url) => Url.parse(url).path) // keep pathname + querystring only
@@ -159,7 +159,6 @@ let main = function (src) {
   )
 
   // UPDATE2
-  let storageGet = src.localStorage.get
   let update2 = $.merge(
     // Load state2 from localStorage
     pageEnter
@@ -169,7 +168,9 @@ let main = function (src) {
   ).delay(1)
 
   // STATE
-  let state = store(seeds, update)
+  let state = store({
+    records: [],
+  }, update).map(AppState)
 
   // STATE2
   let state2 = page.flatMapLatest(prop("state2"))
@@ -191,7 +192,7 @@ let main = function (src) {
 
     state2: state2,
 
-    update2: update2,
+    update2: $.empty(),
 
     DOM: page.flatMapLatest(prop("DOM")),
 

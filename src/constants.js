@@ -1,5 +1,29 @@
-let BOARD_SIZE = [4, 6]
-let MAX_OPEN_CELLS = 2
+let openDelayMs = 1000
 
-exports.BOARD_SIZE = BOARD_SIZE
-exports.MAX_OPEN_CELLS = MAX_OPEN_CELLS
+let timePerCardS = 4
+
+let presets = {
+  nano: {
+    boardSize: [2, 3],
+    timeout: (2 * 2) * timePerCardS,
+  },
+
+  small: {
+    boardSize: [4, 4],
+    timeout: (4 * 4) * timePerCardS,
+  },
+
+  normal: {
+    boardSize: [4, 6],
+    timeout: (4 * 6) * timePerCardS,
+  },
+
+  big: {
+    boardSize: [5, 8],
+    timeout: (5 * 8) * timePerCardS,
+  }
+}
+
+
+exports.openDelayMs = openDelayMs
+exports.presets = presets

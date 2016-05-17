@@ -1,193 +1,152 @@
 let R = require("ramda")
-let {addIndex, all, compose, equals, chain, curry, identity, is, head, length, map, sum, tail} = require("ramda")
-let {decode} = require("ent")
+let {addIndex, append, compose, curry, is, length, map} = require("ramda")
 let {Observable: $} = require("rx")
 let storage = require("store")
-let {a, br, div, h1, h2, p, span} = require("@cycle/dom")
-let {always} = require("../helpers")
-let {derive, overState, pluck, rejectBy, setState, store, toOverState, toState, view} = require("../rx.utils")
-let {BOARD_SIZE, MAX_OPEN_CELLS} = require("../constants")
-let {randomLetterBoard} = require("../makers")
-let seeds = require("../seeds/game")
-let menu = require("../chunks/menu")
-
-let mapi = addIndex(map)
-
-let chaini = addIndex(chain)
-
-let payloadLens = curry((i, j) => compose(R.lensIndex(i), R.lensIndex(j), R.lensIndex(0)))
+let gameHelpers = require("../helpers/game")
+let {atTrue, derive, deriveN, filterBy, overState, pluck, rejectBy, render, setState, store, toOverState, toState, view} = require("../rx.utils")
+let {gameState} = require("../types")
+let {openDelayMs, presets} = require("../constants")
+let {makeEmptyBoard, makeRandomBoard} = require("../makers")
+let gameView = require("../views/game")
 
 let stateLens = curry((i, j) => compose(R.lensIndex(i), R.lensIndex(j), R.lensIndex(1)))
 
-let keepState = curry((state, board) => chain(chain((c) => c[1] == state ? c[0] : []), board))
+let preset = presets.nano
 
-let allEqual = (xs) => all(equals(head(xs)), tail(xs))
+let GameState = gameState(...preset.boardSize)
 
-let total = (board) => sum(map(length, board))
-
-let aboutToClose = (board) => {
-  let opened = keepState(1, board)
-  if (opened.length >= MAX_OPEN_CELLS) {
-    return !allEqual(opened)
-  } else {
-    return false
-  }
-}
-
-let aboutToDone = (board) => {
-  let opened = keepState(1, board)
-  if (opened.length >= MAX_OPEN_CELLS) {
-    return allEqual(opened)
-  } else {
-    return false
-  }
-}
-
-let aboutToLock = (board) => {
-  let opened = keepState(1, board)
-  return opened.length >= MAX_OPEN_CELLS
-}
-
-let aboutToWin = (board) => {
-  let opened = keepState(2, board)
-  return opened.length == total(board)
-}
-
-let closeOpened = (board) => {
-  return map(map((c) => c[1] == 1 ? [c[0], 0] : c), board)
-}
-
-let doneOpened = (board) => {
-  return map(map((c) => c[1] == 1 ? [c[0], 2] : c), board)
-}
-
-// renderCell :: Cell -> String
-let renderCell = curry((i, j, cell) => {
-  let cellAttrs = {dataset: {row: i, col: j}}
-  if (cell[1] == 0) {
-    // closed
-    return span(".cell", cellAttrs,
-      span(".card", {dataset: {state: 0}}, [
-        span(".front", "?"),
-        span(".back", cell[0]),
-      ])
-    )
-  } else if (cell[1] == 1) {
-    // opened
-    return span(".cell", cellAttrs,
-      span(".card.flipped", {dataset: {state: 1}}, [
-        span(".front", "?"),
-        span(".back", cell[0]),
-      ])
-    )
-  } else {
-    // done
-    return span(".cell", cellAttrs,
-      span(".card.flipped.hidden", {dataset: {state: 2}}, [
-        span(".front", "?"),
-        span(".back", cell[0]),
-      ])
-    )
-  }
+let emptyState = () => GameState({
+  started: false,
+  ended: false,
+  paused: false,
+  timeout: preset.timeout,
+  board: makeEmptyBoard(...preset.boardSize),
 })
 
-// [[Cell]] -> VNode
-let renderBoard = (board) => {
-  let rowsM = board.length
-  let colsN = board[0] ? board[0].length : 0
-  return div("#content", [
-    div(`.board.rows-${rowsM}.cols-${colsN}`,
-      chaini((r, i) => mapi((c, j) => renderCell(i, j, c), r), board)
-    ),
-    div(".menu.center.bordered", [
-      div(".item", a(".restart", {href: "#restart"}, "Restart")),
-    ])
-  ])
+let initState = () => GameState({
+  started: true,
+  ended: false,
+  paused: false,
+  timeout: preset.timeout,
+  board: makeRandomBoard(...preset.boardSize),
+})
+
+let makeDerived = (state2) => {
+  return {
+    flags: derive((game) => {
+      return {
+        closeCards: gameHelpers.shouldCloseCards(game),
+        doneCards: gameHelpers.shouldDoneCards(game),
+        lockBoard: gameHelpers.shouldLockBoard(game),
+        winGame: gameHelpers.shouldWinGame(game),
+        loseGame: gameHelpers.shouldLoseGame(game),
+      }
+    }, state2)
+  }
 }
 
-// () -> VNode
-let renderWinScreen = () => {
-  return div("#content", [
-    h2(".text.center.win-title", "You win!"),
-    div(".menu.center.bordered", [
-      div(".item", a(".restart", {href: "#restart"}, "Restart")),
-    ])
-  ])
+let makeIntents = (DOM) => {
+  let clickFrom = (s) => DOM.select(s).events("click").pluck("currentTarget").share()
+
+  return {
+    startGame: clickFrom(".start"),
+    exitGame: clickFrom(".exit"),
+    pauseGame: clickFrom(".pause"),
+    resumeGame: clickFrom(".resume"),
+    openCard: DOM.select(".card[data-state='closed']").events("click")::pluck("currentTarget.parentNode.dataset").share(),
+  }
 }
 
-// {Observable *} -> {Observable *}
-module.exports = (src) => {
-  let clickFrom = (s) => src.DOM.select(s).events("click").pluck("currentTarget").share()
+let makeActions = ({state2, derived, intents}) => {
+  return {
+    startGame: intents.startGame
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowStartGame))
+      .share(),
 
-  // DERIVED STATE
-  let board = src.state2::view("board")
+    exitGame: intents.exitGame
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowExitGame))
+      .share(),
 
-  let derived = {
-    isLocked: derive(aboutToLock, board).combineLatest(src.state2::view("lockedForAnimation"), (x, y) => x || y),
-    isAboutToClose: derive(aboutToClose, board),
-    isAboutToDone: derive(aboutToDone, board),
-    isWin: derive(aboutToWin, board),
-  }
+    pauseGame: intents.pauseGame
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowPauseGame))
+      .share(),
 
-  // INTENTS
-  let intents = {
-    openCard: clickFrom(".card[data-state='0']")
-      ::pluck("parentNode.dataset"),
+    resumeGame: intents.resumeGame
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowResumeGame))
+      .share(),
 
-    restartGame: clickFrom(".restart"),
-  }
-
-  // ACTIONS
-  let actions = {
     openCard: intents.openCard
-      ::rejectBy(derived.isLocked)
-      ::rejectBy(derived.isWin)
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowOpenCard))
+      .share(),
+
+    tick: $.interval(1000)
+      ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowTick))
       .share(),
   }
+}
 
-  // STATE 2
-  let state2 = store(seeds, $.merge(
-    src.update2,
+let makeUpdate = ({state2, derived}) => {
+  // return $.merge(
+  //   src.state2.sample(derived.flags::view("win").filter(id))::toOverState("records", (state) => {
+  //     let intime = _rules.timeout - state2.timeout
+  //     return append({result: "win", time: intime})
+  //   }),
+  //   src.state2.sample(derived.flags::view("lose").filter(id))::toOverState("records", (state) => {
+  //     let done = gameHelpers.keepState(2, state2.board).length
+  //     return append({result: "defeat", done: done})
+  //   })
+  // ).subscribe((fn) => {
+  //   console.log(fn({records: []}))
+  // })
+}
 
-    derived.isAboutToClose.filter(identity)::overState("board", closeOpened).delay(1000), // delay for CSS animation time
-    derived.isAboutToDone.filter(identity)::overState("board", doneOpened),
+let makeUpdate2 = ({update2, derived, actions}) => {
+  return $.merge(
+    // Start / exit game
+    actions.startGame::overState("", (_) => initState()),
+    actions.exitGame::overState("", (_) => emptyState()),
 
+    // Pause / resume game
+    actions.pauseGame::setState("paused", true),
+    actions.resumeGame::setState("paused", false),
+
+    // Open card
     actions.openCard::toOverState("board", (cell) => (state) => {
       let ls = stateLens(Number(cell.row), Number(cell.col))
-      return R.set(ls, 1, state)
+      return R.set(ls, "opened", state)
     }),
 
-    // Restart game: close cards, then change content, with a time to end animations
-    intents.restartGame::overState("board", closeOpened),
-    intents.restartGame::setState("lockedForAnimation", true),
-    intents.restartGame.delay(500)::overState("board", (_) => randomLetterBoard(...BOARD_SIZE)),
-    intents.restartGame.delay(500)::setState("lockedForAnimation", false)
-  ))
+    // Close / done cards
+    derived.flags::atTrue("closeCards")::overState("board", gameHelpers.closeOpened).delay(openDelayMs),
+    derived.flags::atTrue("doneCards")::overState("board", gameHelpers.doneOpened),
 
-  // DOM
-  let DOM = $
-    .combineLatest(src.navi, state2, derived.isWin).debounce(1)
-    .map(([navi, state, isWin]) => {
-      let header = div("#header", [
-        h1("Memory Game"),
-        menu({navi}),
-        div({innerHTML: '<a href="https://github.com/Paqmind/memory-game" class="github-corner"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>'})
-      ])
+    // Ticker
+    actions.tick::overState("timeout", (t) => t > 0 ? t - 1 : t),
 
-      let footer = div("#footer", [
-        p(".copyright", [decode("&copy;"), " ", a({href: "http://paqmind.com", target: "_blank"}, "Paqmind team"), ", 2016"]),
-      ])
+    // Auto win / lose
+    derived.flags::atTrue("winGame")::setState("ended", "win"),
+    derived.flags::atTrue("loseGame")::setState("ended", "defeat")
+  )
+}
 
-      let content = isWin ?
-        renderWinScreen() :
-        renderBoard(state.board)
+module.exports = (src) => {
+  let derived = makeDerived(src.state2)
 
-      return div("#wrapper", [header, content, footer])
-    })
+  let intents = makeIntents(src.DOM)
 
-  // TITLE
-  let title = $.of("Game | Memory Game")
+  let actions = makeActions({state2: src.state2, derived, intents})
 
-  // SINKS
-  return {DOM, state2, title}
+  // let update = makeUpdate({derived, intents, actions})
+
+  let update2 = makeUpdate2({derived, intents, actions})
+
+  let state2 = store(emptyState(), update2).map((x) => GameState(x))
+
+  return {
+    title: $.of("Game | Memory Game"),
+
+    DOM: render(gameView, [src.navi, state2, derived.flags]),
+
+    state2,
+  }
 }

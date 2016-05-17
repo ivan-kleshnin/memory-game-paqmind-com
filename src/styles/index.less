@@ -14,9 +14,14 @@
 *, *:after, *:before {
   box-sizing: border-box;
 }
+
 html {
   font-size: @textFontSize;
   height: 100%;
+}
+
+a:hover {
+ cursor: pointer;
 }
 
 // PAGE ============================================================================================
@@ -176,7 +181,6 @@ a, a:hover, a:focus, a:visited {
     width: @gridStep - @cellMargin * 2;
 
     .card {
-      cursor: pointer;
       display: block;
       font-size: 50%;
       height: 100%;
@@ -213,8 +217,6 @@ a, a:hover, a:focus, a:visited {
       }
 
       &.flipped {
-        cursor: default;
-
         .front {
           transform: rotateY(180deg);
         }
@@ -222,6 +224,10 @@ a, a:hover, a:focus, a:visited {
           transform: rotateY(0deg);
         }
       }
+    }
+
+    .card[data-state="closed"] {
+      cursor: pointer;
     }
   }
 }

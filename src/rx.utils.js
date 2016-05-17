@@ -1,7 +1,7 @@
 let R = require("ramda")
 let {assoc, curry, identity, is, keys, map, not, range, reduce, repeat, split, values} = require("ramda")
 let {Observable: $} = require("rx")
-let {always, appendSliding, fst, snd, lens} = require("./helpers") // flattenObject, unflattenObject
+let {always, appendSliding, fst, snd, lens} = require("./helpers/common") // flattenObject, unflattenObject
 
 // s -> (s -> s) -> s
 let scanFn = curry((state, updateFn) => {
@@ -24,6 +24,8 @@ let pluckN = function (paths) {
   return this.map((v) => map((ls) => R.view(ls, v), lss)).share()
 }
 
+// TODO memoize `view` and `viewN` ?!
+
 // (Observable a ->) String -> Observable b
 let view = function (path) {
   let ls = lens(path)
@@ -42,6 +44,16 @@ let viewN = function (paths) {
     .shareReplay(1)
 }
 
+// (Observable a ->) String -> Observable b
+let atTrue = function (path) {
+  return this::view(path).filter(identity)
+}
+
+// (Observable a ->) String -> Observable b
+let atFalse = function (path) {
+  return this::view(path).filter(not(identity))
+}
+
 // (* -> b) -> [Observable *] -> Observable b
 let deriveN = curry((deriveFn, os) => {
   return $.combineLatest(...os, deriveFn).distinctUntilChanged().shareReplay(1)
@@ -50,6 +62,14 @@ let deriveN = curry((deriveFn, os) => {
 // (a -> b) -> Observable a -> Observable b
 let derive = curry((deriveFn, os) => {
   return deriveN(deriveFn, [os])
+})
+
+// (...* -> VNode) -> [Observable *] -> Observable VNode
+let render = curry((viewFn, os) => {
+  return $
+    .combineLatest(...os)
+    .debounce(1)
+    .map((args) => viewFn(...args))
 })
 
 // s -> Observable (s -> s) -> Observable s
@@ -129,8 +149,11 @@ exports.pluck = pluck
 exports.pluckN = pluckN
 exports.view = view
 exports.viewN = viewN
+exports.atTrue = atTrue
+exports.atFalse = atFalse
 exports.derive = derive
 exports.deriveN = deriveN
+exports.render = render
 
 exports.store = store
 exports.history = history

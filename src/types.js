@@ -1,6 +1,7 @@
 let R = require("ramda")
 let T = require("tcomb")
 
+
 let Type = T.irreducible("Type", T.isType)
 
 let MaybeString = T.maybe(T.String, "MaybeString")
@@ -29,28 +30,45 @@ let matrix = /*T
     return Matrix
   }/*)*/
 
-let CellPayload = T.refinement(T.String, R.T, "CellPayload")
+let CardPayload = T.refinement(T.String, R.T, "CardPayload")
 
-let CellState = T.refinement(NatNumber, (x) => {
-  // 0: closed, 1: opened, 2: done
-  return x == 0 || x == 1 || x == 2
-}, "CellState")
+let CardState = T.enums.of(["empty", "closed", "opened", "done"], "CardState")
 
-let Cell = T.tuple([CellPayload, CellState], "Cell")
+let Card = T.tuple([CardPayload, CardState], "Card")
 
 // NatNumber, NatNumber, MaybeString -> Type
 let board = /*T
   .func([NatNumber, NatNumber, MaybeString], Type)
   .of(*/(m, n, name) => {
-    return matrix(m, n, Cell, name || `Board(${m}, ${n})`)
+    return matrix(m, n, Card, name || `Board(${m}, ${n})`)
   }/*)*/
+
+let GameResult = T.enums.of([false, "win", "defeat"], "GameResult")
+
+let gameState = (m, n) => {
+  return T.struct({
+    started: T.Bool,
+    ended: GameResult,
+    paused: T.Bool,
+    // locked: T.Bool,
+    timeout: NatNumber,
+    board: board(m, n),
+  }, "Game")
+}
+
+let AppState = T.struct({
+  records: T.list(T.Any),
+}, "App")
+
 
 exports.Type = Type
 exports.MaybeString = MaybeString
 exports.NatNumber = NatNumber
 exports.vect = vect
 exports.matrix = matrix
-exports.CellPayload = CellPayload
-exports.CellState = CellState
-exports.Cell = Cell
+exports.CardPayload = CardPayload
+exports.CardState = CardState
+exports.Card = Card
 exports.board = board
+exports.gameState = gameState
+exports.AppState = AppState

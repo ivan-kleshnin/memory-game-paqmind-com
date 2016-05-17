@@ -1,7 +1,7 @@
 let {curry, find} = require("ramda")
 let Url = require("url")
 let Route = require("route-parser")
-let {withSuffix} = require("./helpers")
+let {withSuffix} = require("./helpers/common")
 
 let routes = [
   [new Route("/"), require("./pages/game")],
