@@ -5,7 +5,7 @@ module.exports = (navi) => {
   return div("#wrapper", [
     header(navi),
 
-    div("#content.container.text-holder", [
+    div("#content.container.text.holder.justify", [
       h4(".text.center", "Game Rules"),
 
       p(`

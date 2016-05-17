@@ -1,0 +1,22 @@
+*, *:after, *:before {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: @bgColor;
+  margin: 0;
+  padding: 0;
+}
+
+a, a:hover, a:focus, a:visited {
+  color: @textColor;
+  text-decoration: none;
+}
+
+a:hover {
+  cursor: pointer; // fix cursor for links without href
+}

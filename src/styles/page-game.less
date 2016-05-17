@@ -106,9 +106,15 @@
 
 .status-bar {
   font-size: @textFontSize * 0.9;
-  margin-top: @unit;
   margin-bottom: @unit;
   text-align: center;
+
+  span {
+    margin-right: @unit;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .actions {

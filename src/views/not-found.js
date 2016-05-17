@@ -5,8 +5,8 @@ module.exports = (navi) => {
   return div("#wrapper", [
     header(navi),
 
-    div("#content.container.text-holder", [
-      h4(".text.center", "Not Found"),
+    div("#content.container.text.holder.center", [
+      h4("Not Found"),
 
       p(`
         No luck, pal?
