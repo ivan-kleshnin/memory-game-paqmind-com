@@ -44,16 +44,6 @@ let viewN = function (paths) {
     .shareReplay(1)
 }
 
-// (Observable a ->) String -> Observable b
-let atTrue = function (path) {
-  return this::view(path).filter(identity)
-}
-
-// (Observable a ->) String -> Observable b
-let atFalse = function (path) {
-  return this::view(path).filter(not(identity))
-}
-
 // (* -> b) -> [Observable *] -> Observable b
 let deriveN = curry((deriveFn, os) => {
   return $.combineLatest(...os, deriveFn).distinctUntilChanged().shareReplay(1)
@@ -123,16 +113,6 @@ let toState = function (path) {
   return this::toSetState(path, identity)
 }
 
-// (Observable a ->) String -> Observable b
-let samplePluck = function (path) {
-  return this.sample(this::pluck(path))
-}
-
-// (Observable a ->) String -> Observable b
-let sampleView = function (path) {
-  return this.sample(this::view(path))
-}
-
 // (Observable a ->) Observable Boolean -> Observable a
 let filterBy = function (o) {
   return this.withLatestFrom(o).filter(snd).map(fst)
@@ -143,14 +123,27 @@ let rejectBy = function (o) {
   return this::filterBy(o.map(not))
 }
 
+// (Observable a ->) String -> v -> Observable b
+let at = function (path, filterFn) {
+  return this.sample(this::pluck(path).filter(filterFn))
+}
+
+// (Observable a ->) String -> Observable b
+let atTrue = function (path) {
+  return this::at(path, identity)
+}
+
+// (Observable a ->) String -> Observable b
+let atFalse = function (path) {
+  return this::at(path, not(identity))
+}
+
 exports.scanFn = scanFn
 
 exports.pluck = pluck
 exports.pluckN = pluckN
 exports.view = view
 exports.viewN = viewN
-exports.atTrue = atTrue
-exports.atFalse = atFalse
 exports.derive = derive
 exports.deriveN = deriveN
 exports.render = render
@@ -164,8 +157,9 @@ exports.overState = overState
 exports.setState = setState
 exports.toState = toState
 
-exports.samplePluck = samplePluck
-exports.sampleView = sampleView
-
 exports.filterBy = filterBy
 exports.rejectBy = rejectBy
+
+exports.at = at
+exports.atTrue = atTrue
+exports.atFalse = atFalse

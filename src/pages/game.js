@@ -85,21 +85,6 @@ let makeActions = ({state2, derived, intents}) => {
   }
 }
 
-let makeUpdate = ({state2, derived}) => {
-  // return $.merge(
-  //   src.state2.sample(derived.flags::view("win").filter(id))::toOverState("records", (state) => {
-  //     let intime = _rules.timeout - state2.timeout
-  //     return append({result: "win", time: intime})
-  //   }),
-  //   src.state2.sample(derived.flags::view("lose").filter(id))::toOverState("records", (state) => {
-  //     let done = gameHelpers.keepState(2, state2.board).length
-  //     return append({result: "defeat", done: done})
-  //   })
-  // ).subscribe((fn) => {
-  //   console.log(fn({records: []}))
-  // })
-}
-
 let makeUpdate2 = ({update2, derived, actions}) => {
   return $.merge(
     // Start / exit game
@@ -135,8 +120,6 @@ module.exports = (src) => {
   let intents = makeIntents(src.DOM)
 
   let actions = makeActions({state2: src.state2, derived, intents})
-
-  // let update = makeUpdate({derived, intents, actions})
 
   let update2 = makeUpdate2({derived, intents, actions})
 

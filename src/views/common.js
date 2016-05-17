@@ -5,9 +5,7 @@ let menu = (navi) => {
   let {aa} = navi
   return div("#menu.center.bottom-bordered", [
     div(".item", aa({href: "/"}, "Game")),
-    div(".item", aa({href: "/records.html"}, "Records")),
     div(".item", aa({href: "/help.html"}, "Help")),
-    div(".item", aa({href: "/404.html"}, "404 test")),
   ])
 }
 

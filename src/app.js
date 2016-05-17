@@ -146,18 +146,6 @@ let main = (src) => {
     .distinctUntilChanged().shareReplay(1)
     .delay(1) // shift to the next tick (navi <- routing: immediate)
 
-  // UPDATE
-  let update = $.merge(
-    // Updates from page
-    page.flatMapLatest(prop("update")),
-
-    // Load state from localStorage
-    windowLoad
-      .withLatestFrom(src.localStorage.get(makeStateKey()), (_, s) => s)
-      .filter(identity)
-      ::toState("")
-  )
-
   // UPDATE2
   let update2 = $.merge(
     // Load state2 from localStorage
@@ -168,9 +156,7 @@ let main = (src) => {
   ).delay(1)
 
   // STATE
-  let state = store({
-    records: [],
-  }, update).map(AppState)
+  let state = store({}, $.empty()).map((s) => AppState(s))
 
   // STATE2
   let state2 = page.flatMapLatest(prop("state2"))

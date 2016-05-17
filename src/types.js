@@ -56,9 +56,7 @@ let gameState = (m, n) => {
   }, "Game")
 }
 
-let AppState = T.struct({
-  records: T.list(T.Any),
-}, "App")
+let AppState = T.struct({}, "App")
 
 
 exports.Type = Type
