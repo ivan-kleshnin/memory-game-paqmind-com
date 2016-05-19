@@ -1,9 +1,8 @@
 let R = require("ramda")
-let {addIndex, append, compose, curry, is, length, map} = require("ramda")
+let {compose, curry} = require("ramda")
 let {Observable: $} = require("rx")
-let storage = require("store")
 let gameHelpers = require("../helpers/game")
-let {atTrue, derive, deriveN, filterBy, overState, pluck, rejectBy, render, setState, store, toOverState, toState, view} = require("../rx.utils")
+let {atTrue, derive, filterBy, overState, pluck, render, setState, store, toOverState} = require("../rx.utils")
 let {gameState} = require("../types")
 let {openDelayMs, presets} = require("../constants")
 let {makeEmptyBoard, makeRandomBoard} = require("../makers")
@@ -53,7 +52,7 @@ let makeIntents = (DOM) => {
     exitGame: clickFrom(".exit"),
     pauseGame: clickFrom(".pause"),
     resumeGame: clickFrom(".resume"),
-    openCard: DOM.select(".card[data-state='closed']").events("click")::pluck("currentTarget.parentNode.dataset").share(),
+    openCard: clickFrom(".card[data-state='closed']"),
   }
 }
 
@@ -77,6 +76,7 @@ let makeActions = ({state2, derived, intents}) => {
 
     openCard: intents.openCard
       ::filterBy(state2.combineLatest(derived.flags, gameHelpers.allowOpenCard))
+      ::pluck("parentNode.dataset")
       .share(),
 
     tick: $.interval(1000)
