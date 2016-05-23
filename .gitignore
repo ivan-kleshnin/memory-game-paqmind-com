@@ -8,3 +8,4 @@ test*.js
 *.iml
 
 /public/bundle.js
+/public/bundle.css
