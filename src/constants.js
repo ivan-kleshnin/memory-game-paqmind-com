@@ -1,6 +1,6 @@
 let openDelayMs = 1000
 
-let timePerCardS = 4
+let timePerCardS = 3
 
 let presets = {
   nano: {
@@ -13,7 +13,7 @@ let presets = {
     timeout: (4 * 4) * timePerCardS,
   },
 
-  normal: {
+  medium: {
     boardSize: [4, 6],
     timeout: (4 * 6) * timePerCardS,
   },

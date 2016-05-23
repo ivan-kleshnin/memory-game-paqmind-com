@@ -10,7 +10,7 @@ let gameView = require("../views/game")
 
 let stateLens = curry((i, j) => compose(R.lensIndex(i), R.lensIndex(j), R.lensIndex(1)))
 
-let preset = presets.nano
+let preset = presets.medium
 
 let GameState = gameState(...preset.boardSize)
 
