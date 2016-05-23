@@ -48,16 +48,6 @@ let swap = curry((i1, i2, array) => {
   )(array)
 })
 
-//
-let appendSliding = curry((n, x, xs) => {
-  let ys = append(x, xs)
-  if (ys.length > n) {
-    return drop(ys.length - n, ys)
-  } else {
-    return ys
-  }
-})
-
 // LENSING
 // String -> Lens
 let lens = curry((path) => {
@@ -178,7 +168,6 @@ exports.snd = snd
 exports.adjustBy = adjustBy
 exports.updateBy = updateBy
 exports.swap = swap
-exports.appendSliding = appendSliding
 
 // LENSING
 exports.lens = lens
