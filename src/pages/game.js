@@ -85,7 +85,7 @@ let makeActions = ({state2, derived, intents}) => {
   }
 }
 
-let makeUpdate2 = ({update2, derived, actions}) => {
+let makeUpdate2 = ({derived, actions}) => {
   return $.merge(
     // Start / exit game
     actions.startGame::overState("", (_) => initState()),
@@ -121,7 +121,7 @@ module.exports = (src) => {
 
   let actions = makeActions({state2: src.state2, derived, intents})
 
-  let update2 = makeUpdate2({derived, intents, actions})
+  let update2 = makeUpdate2({derived, actions})
 
   let state2 = store(emptyState(), update2).map((x) => GameState(x))
 
