@@ -43,7 +43,7 @@ let canvas = (game) => {
 let buttons = (game) => {
   return div(".actions", [
     gameHelpers.allowStartGame(game) ?
-      div(".item", a(".start", "New Game")) :
+      (game.ended ? div(".item", a(".start", "Try again")) : div(".item", a(".start", "Start Game"))) :
       null,
 
     gameHelpers.allowExitGame(game) ?

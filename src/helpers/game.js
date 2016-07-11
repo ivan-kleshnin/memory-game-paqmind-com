@@ -71,7 +71,7 @@ let shouldLoseGame = (game) => {
 
 // GAME + FLAGS ====================================================================================
 // Game, Flags -> Boolean
-let allowStartGame = (game, flags) => !game.started
+let allowStartGame = (game, flags) => !game.started || game.ended
 
 // Game, Flags -> Boolean
 let allowExitGame = (game, flags) => game.started
