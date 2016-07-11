@@ -5,7 +5,7 @@ let Class = require("classnames")
 let {Observable: $, ReplaySubject} = require("rx")
 let {history, view, pluck, store, toState} = require("rx-utils")
 let storage = require("store")
-let Cycle = require("@cycle/core")
+let Cycle = require("@cycle/rx-run")
 let {a, makeDOMDriver} = require("@cycle/dom")
 let {fst, snd} = require("./helpers/common")
 let {makeURLDriver, makeDocumentTitleDriver, makeLogDriver, makeLocalStorageDriver} = require("./drivers")
@@ -86,7 +86,10 @@ let main = (src) => {
         log: $.empty(),      // affects log
         title: $.empty(),    // affects title
         state2: $.empty(),   // nested state loop
-      }, navi.page(merge(src, {state2: sinkProxies.state2})))
+      }, navi.page(merge(src, {
+        navi: $.of(navi),
+        state2: sinkProxies.state2
+      })))
 
       // Subscribe current page
       let subscriptions = [

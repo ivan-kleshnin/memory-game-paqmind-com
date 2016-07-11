@@ -7,9 +7,9 @@
     "dist": "NODE_ENV=production webpack --config webpack.config-prod.js"
   },
   "dependencies": {
-    "@cycle/core": "^6.0.3",
     "@cycle/dom": "^9.1.0",
     "@cycle/isolate": "^1.2.0",
+    "@cycle/rx-run": "^7.0.0",
     "autoprefixer": "^6.3.6",
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",
