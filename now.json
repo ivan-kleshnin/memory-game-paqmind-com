@@ -4,5 +4,11 @@
   "public": true,
   "builds": [
     {"src": "public/*", "use": "@now/static"}
+  ],
+  "routes": [
+    {"src": "/", "dest": "/public/index.html"},
+    {"src": "/help", "dest": "/public/help.html"},
+    {"src": "/bundle.css", "dest": "/public/bundle.css"},
+    {"src": "/bundle.js", "dest": "/public/bundle.js"}
   ]
 }
