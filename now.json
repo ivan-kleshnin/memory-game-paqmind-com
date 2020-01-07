@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "memory-game-paqmind-com",
+  "public": true,
+  "builds": [
+    {"src": "public/*", "use": "@now/static"}
+  ]
+}

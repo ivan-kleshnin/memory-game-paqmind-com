@@ -10,6 +10,3 @@ npm-debug.log
 
 test*.js
 *.iml
-
-/public/bundle.js
-/public/bundle.css
